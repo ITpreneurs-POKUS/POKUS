@@ -16,6 +16,10 @@ export declare type Props = React.ComponentPropsWithRef<typeof View> & {
      */
     active?: boolean;
     /**
+     * Whether the item is disabled.
+     */
+    disabled?: boolean;
+    /**
      * Function to execute on press.
      */
     onPress?: (e: GestureResponderEvent) => void;
@@ -63,7 +67,7 @@ export declare type Props = React.ComponentPropsWithRef<typeof View> & {
  * ```
  */
 declare const DrawerItem: {
-    ({ icon, label, active, theme: themeOverrides, rippleColor: customRippleColor, style, onPress, accessibilityLabel, right, labelMaxFontSizeMultiplier, ...rest }: Props): React.JSX.Element;
+    ({ icon, label, active, disabled, theme: themeOverrides, rippleColor: customRippleColor, style, onPress, accessibilityLabel, right, labelMaxFontSizeMultiplier, ...rest }: Props): React.JSX.Element;
     displayName: string;
 };
 export default DrawerItem;

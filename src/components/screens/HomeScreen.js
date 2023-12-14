@@ -1,30 +1,32 @@
-import { StyleSheet, View, BackHandler } from 'react-native'
-import React, {useEffect} from 'react'
-import Home from '../forms/Home';
+import { StyleSheet, View, Image } from 'react-native';
 
-export default function HomeScreen(props) {
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      // Do nothing when the back button is pressed
-      return true;
-    });
+export default function HomeScreen({navigation}) {
 
-    // Cleanup the event listener when the component unmounts
-    return () => backHandler.remove();
-  }, []);
+const KhenImage = require('../../../assets/KhenImage.png');
 
   return (
     <View style={styles.container}>
-      <Home {...props}/>
+
+        {/* <View style={styles.imageContainer}>
+            <Image source={KhenImage} style={styles.imageStyle}></Image>
+        </View> */}
+        
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#050A30',
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#050A30',
+    },
+    // imageContainer: {
+    //     flex: 1,
+    // },
+    // imageStyle: {
+    //     width: 300,
+    //     height: 300,
+    // }
 });

@@ -36,7 +36,7 @@ export default function LoginForm({navigation}) {
 
             // Introduce a delay of 2 seconds (adjust the time as needed)
             setTimeout(() => {
-                navigation.navigate("Home");
+                navigation.navigate("HomeDrawer");
             }, 1000);
 
             // Reset the form
@@ -179,7 +179,7 @@ export default function LoginForm({navigation}) {
                             <View style={styles.loginContainer}>
                                 <Text style={styles.textStyle}>Don't Have an Account?</Text>
             
-                                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                                <TouchableOpacity onPress={() => navigation.navigate('HomeDrawer')}>
                                 <Text style={[styles.textStyle, styles.loginTextStyle]}>Signup Here</Text>
                                 </TouchableOpacity>
                             </View>

@@ -183,9 +183,9 @@ const Card = _ref => {
     style: [{
       borderColor
     }, styles.outline, borderRadiusCombinedStyles]
-  }), hasPassedTouchHandler ? /*#__PURE__*/React.createElement(_reactNative.TouchableWithoutFeedback, {
+  }), hasPassedTouchHandler ? /*#__PURE__*/React.createElement(_reactNative.Pressable, {
     accessible: accessible,
-    delayPressIn: 0,
+    unstable_pressDelay: 0,
     disabled: disabled,
     delayLongPress: delayLongPress,
     onLongPress: onLongPress,

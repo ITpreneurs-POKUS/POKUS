@@ -38,6 +38,7 @@ const DrawerItem = _ref => {
     icon,
     label,
     active,
+    disabled,
     theme: themeOverrides,
     rippleColor: customRippleColor,
     style,
@@ -60,6 +61,7 @@ const DrawerItem = _ref => {
   const font = isV3 ? theme.fonts.labelLarge : theme.fonts.medium;
   return /*#__PURE__*/React.createElement(_reactNative.View, rest, /*#__PURE__*/React.createElement(_TouchableRipple.default, {
     borderless: true,
+    disabled: disabled,
     onPress: onPress,
     style: [styles.container, {
       backgroundColor,

@@ -29,6 +29,7 @@ const DrawerItem = _ref => {
     icon,
     label,
     active,
+    disabled,
     theme: themeOverrides,
     rippleColor: customRippleColor,
     style,
@@ -51,6 +52,7 @@ const DrawerItem = _ref => {
   const font = isV3 ? theme.fonts.labelLarge : theme.fonts.medium;
   return /*#__PURE__*/React.createElement(View, rest, /*#__PURE__*/React.createElement(TouchableRipple, {
     borderless: true,
+    disabled: disabled,
     onPress: onPress,
     style: [styles.container, {
       backgroundColor,
