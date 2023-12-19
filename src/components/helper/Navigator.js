@@ -64,7 +64,7 @@ function AuthStack() {
       }}>
         <HomeStack.Screen name='Home' component={HomeScreen} />
         <HomeStack.Screen name='Todolist' component={Todolist} />
-        <HomeStack.Screen name='NoteTaker' component={NoteTakerTabNavigator} />
+        <HomeStack.Screen name='Notes' component={NoteTakerTabNavigator} />
         <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
       </HomeStack.Navigator>
     );
@@ -95,7 +95,7 @@ function AuthStack() {
     
     return (
       <Tab.Navigator 
-        initialRouteName="NoteTaker"
+        initialRouteName="Notes"
         activeColor="white"
         barStyle={{ backgroundColor: '#050A30' }}
         labeled={false}
