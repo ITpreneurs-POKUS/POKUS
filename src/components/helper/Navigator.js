@@ -142,5 +142,5 @@ function AuthStack() {
   export default function AppNavigator() {
     return (
         <AuthStack />
-    )
+    );
   }
