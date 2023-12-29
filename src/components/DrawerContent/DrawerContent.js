@@ -12,6 +12,7 @@ const DrawerList = [
   {icon: 'account-outline', label: 'Home', navigateTo: 'Home'},
   {icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist'},
   {icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'Notes'},
+  {icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot'},
 ];
 
 

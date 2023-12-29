@@ -5,8 +5,8 @@ import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 
-import Todolist from '../screens/Todolist';
-import NoteTaker from '../screens/NoteTaker';
+import Todolist from '../screens/Features/Todolist';
+import NoteTaker from '../screens/Features/NoteTaker';
 
 import SearchTab from '../BottomTabs/SearchTab';
 import AddTab from '../BottomTabs/AddTab';
@@ -22,6 +22,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerActions, useNavigation } from '@react-navigation/native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useTheme } from 'react-native-paper';
+import ChatBot from '../screens/Features/ChatBot';
 
 
 function AuthStack() {
@@ -65,6 +66,7 @@ function AuthStack() {
         <HomeStack.Screen name='Home' component={HomeScreen} />
         <HomeStack.Screen name='Todolist' component={Todolist} />
         <HomeStack.Screen name='Notes' component={NoteTakerTabNavigator} />
+        <HomeStack.Screen name='ChatBot' component={ChatBot} />
         <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
       </HomeStack.Navigator>
     );
@@ -97,7 +99,7 @@ function AuthStack() {
       <Tab.Navigator 
         initialRouteName="Notes"
         activeColor="white"
-        barStyle={{ backgroundColor: '#050A30' }}
+        barStyle={{ backgroundColor: '#040827' }}
         labeled={false}
       >
         <Tab.Screen
