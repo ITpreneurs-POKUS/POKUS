@@ -8,8 +8,8 @@ There are two methods for getting started with this repo.
 Checkout this repo, install dependencies, then start the process with the following:
 
 ```
-> git clone https://github.com/nabendu82/TimerReactNative.git
-> cd TimerReactNative
+> git clone https://github.com/ITpreneurs-POKUS/POKUS.git
+> cd POKUS
 > npm install
 > npm start
 ```
