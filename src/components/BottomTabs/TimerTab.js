@@ -60,7 +60,7 @@ export default class TimerTab extends Component {
         shouldSetBadge: false,
       }),
     });
-
+  
     // Add a listener for notification actions
     Notifications.addNotificationResponseReceivedListener(response => {
       const { actionIdentifier } = response;
@@ -70,6 +70,7 @@ export default class TimerTab extends Component {
       }
     });
   };
+  
 
   playNotificationSound = async () => {
     console.log('Playing notification sound');
@@ -89,79 +90,79 @@ export default class TimerTab extends Component {
     const notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Timer Finished',
-        body: "Your timer has finished!",
-        sound: 'TimerAlarm.mp3',
-        shouldShowAlert: true,  // Set this to true to make the notification pop up on the screen
+        body: "Your timer has finished!"
       },
       trigger: null,
     });
-  
+
     await this.playNotificationSound();
-  
+
     console.log('Scheduled notification with ID:', notificationId);
   };
-  
 
   start = () => {
-  // Check if a valid time is selected
-  const selectedTimeInSeconds =
-    parseInt(this.state.selectedHours, 10) * 3600 +
-    parseInt(this.state.selectedMinutes, 10) * 60 +
-    parseInt(this.state.selectedSeconds, 10);
-
-  if (selectedTimeInSeconds <= 0) {
-    // Display an alert or take any other appropriate action
-    Alert.alert("Invalid Time", "Please select a time.");
-    return;
-  }
-
-  // Continue with starting the timer
-  this.setupNotifications();
-  this.setState({
-    remainingSeconds: selectedTimeInSeconds,
-    isRunning: true,
-    alertShown: false, // New state to track if the alert has been shown
-  });
-
-  this.interval = setInterval(() => {
-    this.setState((state) => ({
-      remainingSeconds: state.remainingSeconds - 1,
-    }));
-
-    if (this.state.remainingSeconds === 0 && !this.state.alertShown) {
-      // Set alertShown to true to prevent showing the alert multiple times
-      this.setState({ alertShown: true });
-
-      // Schedule a notification when the timer reaches 0
-      this.scheduleNotification();
-
-      // Show an alert when the timer reaches 0
-      Alert.alert(
-        "Timer Alert",
-        "Your timer has reached zero!",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              // Stop the notification sound when the alert is dismissed
-              this.stopNotificationSound();
-              this.stop();
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-    } else if (this.state.remainingSeconds < 0) {
-      // Stop the timer when it goes negative
-      clearInterval(this.interval);
-      this.interval = null;
-      this.setState({
-        remainingSeconds: 0,
-        isRunning: false,
-      });
+    // Check if a valid time is selected
+    const selectedTimeInSeconds =
+      parseInt(this.state.selectedHours, 10) * 3600 +
+      parseInt(this.state.selectedMinutes, 10) * 60 +
+      parseInt(this.state.selectedSeconds, 10);
+  
+    if (selectedTimeInSeconds <= 0) {
+      // Display an alert or take any other appropriate action
+      Alert.alert("Invalid Time", "Please select a time.");
+      return;
     }
-  }, 1000);
-};
+  
+    // Continue with starting the timer
+    this.setupNotifications();
+    this.setState({
+      remainingSeconds: selectedTimeInSeconds,
+      isRunning: true,
+      alertShown: false, // New state to track if the alert has been shown
+    });
+  
+    this.interval = setInterval(() => {
+      this.setState((state) => ({
+        remainingSeconds: state.remainingSeconds - 1,
+      }));
+  
+      if (this.state.remainingSeconds === 0 && !this.state.alertShown) {
+        // Set alertShown to true to prevent showing the alert multiple times
+        this.setState({ alertShown: true });
+  
+        // Schedule a notification when the timer reaches 0
+        this.scheduleNotification();
+  
+        // Display the alert with a delay of 2 seconds
+        setTimeout(() => {
+          Alert.alert(
+            "Timer Alert",
+            "Your timer has reached zero!",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  // Stop the notification sound when the alert is dismissed
+                  this.stopNotificationSound();
+                  this.stop();
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }, 5000);
+      } else if (this.state.remainingSeconds < 0) {
+        // Stop the timer when it goes negative
+        clearInterval(this.interval);
+        this.interval = null;
+        this.setState({
+          remainingSeconds: 0,
+          isRunning: false,
+        });
+      }
+    }, 1000);
+  };
+  
 
 // Add this function to stop the notification sound
 stopNotificationSound = async () => {

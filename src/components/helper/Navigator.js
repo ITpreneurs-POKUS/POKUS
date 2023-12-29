@@ -23,6 +23,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { useTheme } from "react-native-paper";
+import EditProfileScreen from "../screens/EditProfileScreen";
+
 
 function AuthStack() {
   const AuthStack = createNativeStackNavigator();
@@ -73,6 +75,7 @@ function HomeStack() {
         <HomeStack.Screen name='AddNotes' component={AddNotes} options={{ headerShown: false }}/>
         <HomeStack.Screen name='Notes' component={NoteTakerTabNavigator} />
         <HomeStack.Screen name='ChatBot' component={ChatBot} />
+        <HomeStack.Screen name='Profile' component={EditProfileScreen} />
         <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
       </HomeStack.Navigator>
     );
