@@ -1,12 +1,11 @@
-import react from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
-
+import { Alert } from "react-native";
 
 
 async function delNote (note, navigation){
     if(note.id === undefined){
-        Alert.alert("Error", "ID is undefined", [
+        Alert.alert("Error", "No Notes Selected", [
             {
               text: "OK",
               style: "cancel",

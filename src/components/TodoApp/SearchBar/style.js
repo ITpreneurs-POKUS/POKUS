@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     searchArea:{
         backgroundColor: colors.searchBar,
         borderRadius: 10,
-        marginBottom: 10,
+        marginVertical: 20,
         padding:17
     }
 })

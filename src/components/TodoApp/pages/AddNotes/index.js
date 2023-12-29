@@ -63,7 +63,7 @@ function AddNotes({ route, navigation }) {
           style={[
             styles.actionButton,
             {
-              backgroundColor: "#017ce9",
+              backgroundColor: "#101A6B",
               alignSelf: "center",
               width: "35%",
               marginTop: 20,
@@ -97,7 +97,7 @@ function AddNotes({ route, navigation }) {
         }}
       >
         <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: "#2196f3" }]}
+          style={[styles.actionButton, { backgroundColor: "#017CE9" }]}
           onPress={() => saveNote(note, navigation)}
         >
           <Feather name="save" size={29} color="white" />

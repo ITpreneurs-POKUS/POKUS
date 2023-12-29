@@ -25,7 +25,6 @@ const ModalNotification = ({
     showHours: false,
   });
   
-  date.setSeconds(date.getSeconds() + 10);
   
   async function schedulePushNotification() {
     const id = await Notifications.scheduleNotificationAsync({

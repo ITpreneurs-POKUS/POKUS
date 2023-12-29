@@ -5,9 +5,10 @@ import SignUpScreen from "../screens/SignUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import HomeScreen from "../screens/HomeScreen";
 
-import Todolist from "../TodoApp/pages/Todolist";
+import Todolist from "../screens/Features/Todolist";
 import AddNotes from "../TodoApp/pages/AddNotes";
-import NoteTaker from "../screens/NoteTaker";
+import NoteTaker from "../screens/Features/NoteTaker";
+import ChatBot from "../screens/Features/ChatBot";
 
 import SearchTab from "../BottomTabs/SearchTab";
 import AddTab from "../BottomTabs/AddTab";
@@ -55,6 +56,7 @@ function HomeStack() {
         },
         headerTintColor: "#fff",
         headerTitleAlign: "center",
+        
         headerLeft: () => {
           return (
             <Icon
@@ -65,28 +67,17 @@ function HomeStack() {
             />
           );
         },
-      }}
-    >
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Notes" component={NoteTakerTabNavigator} />
-      <HomeStack.Screen
-        name="Todolist"
-        component={Todolist}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="AddNotes"
-        component={AddNotes}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        options={{ headerShown: false }}
-        name="BackToLanding"
-        component={AuthStack}
-      />
-    </HomeStack.Navigator>
-  );
-}
+      }}>
+        <HomeStack.Screen name='Home' component={HomeScreen} />
+        <HomeStack.Screen name='Todolist' component={Todolist} />
+        <HomeStack.Screen name='AddNotes' component={AddNotes} options={{ headerShown: false }}/>
+        <HomeStack.Screen name='Notes' component={NoteTakerTabNavigator} />
+        <HomeStack.Screen name='ChatBot' component={ChatBot} />
+        <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
+      </HomeStack.Navigator>
+    );
+  }
+  
 
 function HomeDrawer() {
   const HomeDrawer = createDrawerNavigator();
@@ -112,7 +103,7 @@ function NoteTakerTabNavigator() {
   const Tab = createMaterialBottomTabNavigator();
 
   const theme = useTheme();
-  theme.colors.secondaryContainer = "transperent";
+  theme.colors.secondaryContainer = "transparent";
 
   return (
     <Tab.Navigator
