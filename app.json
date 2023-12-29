@@ -19,11 +19,13 @@
     },
     "android": {
       "adaptiveIcon": {
+        "useNextNotificationsApi": true,
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
+      "allowNotifications": true,
       "favicon": "./assets/favicon.png"
     }
   }

@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 import colors from "../styles/colors";
 
-const width = (Dimensions.get("window").width - 60) / 1;
+const width = (Dimensions.get("window").width - 70) / 1;
 const height = (Dimensions.get("window").height - 400) / 2;
 
 const styles = StyleSheet.create({

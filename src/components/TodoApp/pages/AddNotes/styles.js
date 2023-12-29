@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   headerContainer: {
     width: "100%",
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     color: "#000",
-    width: 350,
+    width: 400,
     height: 150,
   },
 

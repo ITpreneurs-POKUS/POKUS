@@ -90,15 +90,17 @@ export default class TimerTab extends Component {
       content: {
         title: 'Timer Finished',
         body: "Your timer has finished!",
-        sound: 'TimerAlarm.mp3',  // You can customize the sound by providing the sound file name
+        sound: 'TimerAlarm.mp3',
+        shouldShowAlert: true,  // Set this to true to make the notification pop up on the screen
       },
       trigger: null,
     });
-
+  
     await this.playNotificationSound();
-
+  
     console.log('Scheduled notification with ID:', notificationId);
   };
+  
 
   start = () => {
   // Check if a valid time is selected

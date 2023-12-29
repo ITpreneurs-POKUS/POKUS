@@ -44,6 +44,7 @@ function renderNote({ item, navigation }) {
               <Text style={[styles.date]}>
                 Date: {formatDate(new Date(item.date))}
               </Text>
+              <Text> </Text>
               <Text style={styles.date}>
                 Time: {formatTime(new Date(item.date))}
               </Text>
