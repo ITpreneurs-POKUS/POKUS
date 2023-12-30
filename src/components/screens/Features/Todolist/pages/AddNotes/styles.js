@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     width: "100%",
     marginBottom: 20,
-    paddingVertical: 20,
+    paddingVertical: 15,
     justifyContent: "center",
     backgroundColor: "#101A6B",
     flexDirection: "row",
