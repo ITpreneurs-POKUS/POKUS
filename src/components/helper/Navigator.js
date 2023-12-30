@@ -5,15 +5,15 @@ import SignUpScreen from "../screens/SignUpScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import HomeScreen from "../screens/HomeScreen";
 
-import Todolist from "../screens/Features/Todolist";
-import AddNotes from "../TodoApp/pages/AddNotes";
-import NoteTaker from "../screens/Features/NoteTaker";
+import Todolist from "../screens/Features/Todolist/pages/home/index";
+import AddNotes from "../screens/Features/Todolist/pages/AddNotes/index";
+import NoteTaker from "../screens/Features/NoteTaker/NoteTaker";
 import ChatBot from "../screens/Features/ChatBot";
 
-import SearchTab from "../BottomTabs/SearchTab";
-import AddTab from "../BottomTabs/AddTab";
-import TimerTab from "../BottomTabs/TimerTab";
-import DNDTab from "../BottomTabs/DNDTab";
+import SearchTab from "../screens/Features/NoteTaker/BottomTabs/SearchTab";
+import AddTab from "../screens/Features/NoteTaker/BottomTabs/AddTab";
+import TimerTab from "../screens/Features/NoteTaker/BottomTabs/TimerTab";
+import DNDTab from "../screens/Features/NoteTaker/BottomTabs/DNDTab";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DrawerContent from "../DrawerContent/DrawerContent";

@@ -2,14 +2,7 @@ import { StyleSheet } from "react-native";
 
 const style = StyleSheet.create ({
     container:{
-        flex: 1,
-        paddingTop: 16,
-        marginTop: 16, 
-    },
-    header:{
-        marginBottom: 20,
-        backgroundColor: "#101A6B",
-        width: '100%'
+        flex: 1, 
     },
     
     addNoteButton:{

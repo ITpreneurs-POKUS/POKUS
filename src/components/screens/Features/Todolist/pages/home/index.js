@@ -10,10 +10,11 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import SearchBar from "../../TodoApp/SearchBar";
-import Colors from "../../TodoApp/styles/colors";
-import Notes from "../../TodoApp/RenderNotes";
-import styles from "../Styles/Todostyles";
+import SearchBar from "../../SearchBar";
+import Style from "./styles";
+import Colors from "../../styles/colors";
+import Notes from "../../RenderNotes";
+import style from "./styles";
 
 export default function Todolist({ navigation }) {
   const [data, setData] = useState(null);
@@ -51,7 +52,7 @@ export default function Todolist({ navigation }) {
     return (
       <SafeAreaView
         style={[
-          styles.container,
+          style.container,
           {
             marginLeft: Platform.OS === "android" ? 0 : 20,
             marginRight: Platform.OS === "android" ? 0 : 20,
@@ -59,11 +60,11 @@ export default function Todolist({ navigation }) {
         ]}
       >
   
-        <View style = {styles.list}>
+        <View style = {style.list}>
           <SearchBar data={data} onChange={setData} />
           <FlatList
             ListEmptyComponent={
-              <Text style={[styles.list, { textAlign: "center" }]}>
+              <Text style={[style.list, { textAlign: "center" }]}>
                 No Data!
               </Text>
             }
@@ -76,10 +77,10 @@ export default function Todolist({ navigation }) {
         </View>
 
         <TouchableOpacity
-          style={styles.addNoteButton}
+          style={Style.addNoteButton}
           onPress={() => navigation.navigate("AddNotes", { search: false })}
         >
-          <AntDesign name="pluscircle" size={60} color={'#101A6B'} />
+          <AntDesign name="pluscircle" size={60} color={Colors.addButton} />
         </TouchableOpacity>
       </SafeAreaView>
     );

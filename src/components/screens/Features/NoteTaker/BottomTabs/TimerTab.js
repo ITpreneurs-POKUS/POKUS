@@ -79,7 +79,7 @@ export default class TimerTab extends Component {
     this.setState({ notificationSound: soundObject });
   
     try {
-      await soundObject.loadAsync(require('../../../assets/TimerAlarm.mp3'));
+      await soundObject.loadAsync(require('../../../../../../assets/TimerAlarm.mp3'));
       await soundObject.playAsync();
     } catch (error) {
       console.error('Error loading sound', error);
