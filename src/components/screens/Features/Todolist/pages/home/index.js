@@ -25,7 +25,7 @@ export default function Todolist({ navigation }) {
       setLoading(true);
       const getData = async () => {
         try {
-          let notes = await AsyncStorage.getItem("notes");
+          let notes = await AsyncStorage.getItem("todoNotes");
           if (notes === undefined || notes === null) {
             notes = "[]";
           }

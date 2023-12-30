@@ -7,13 +7,13 @@ import HomeScreen from "../screens/HomeScreen";
 
 import Todolist from "../screens/Features/Todolist/pages/home/index";
 import AddNotes from "../screens/Features/Todolist/pages/AddNotes/index";
-import NoteTaker from "../screens/Features/NoteTaker/NoteTaker";
+// import NoteTaker from "../screens/Features/NoteTaker/NoteTaker";
 import ChatBot from "../screens/Features/ChatBot";
 
-import SearchTab from "../screens/Features/NoteTaker/BottomTabs/SearchTab";
-import AddTab from "../screens/Features/NoteTaker/BottomTabs/AddTab";
-import TimerTab from "../screens/Features/NoteTaker/BottomTabs/TimerTab";
-import DNDTab from "../screens/Features/NoteTaker/BottomTabs/DNDTab";
+// import SearchTab from "../screens/Features/NoteTaker/BottomTabs/SearchTab";
+// import AddTab from "../screens/Features/NoteTaker/BottomTabs/AddTab";
+// import TimerTab from "../screens/Features/NoteTaker/BottomTabs/TimerTab";
+// import DNDTab from "../screens/Features/NoteTaker/BottomTabs/DNDTab";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DrawerContent from "../DrawerContent/DrawerContent";
@@ -21,9 +21,12 @@ import DrawerContent from "../DrawerContent/DrawerContent";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { useTheme } from "react-native-paper";
+// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+// import { useTheme } from "react-native-paper";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import NoteTakerScreen from "../screens/Features/NoteTaker/NoteTakerScreen";
+
+
 
 
 function AuthStack() {
@@ -73,7 +76,7 @@ function HomeStack() {
         <HomeStack.Screen name='Home' component={HomeScreen} />
         <HomeStack.Screen name='Todolist' component={Todolist} />
         <HomeStack.Screen name='AddNotes' component={AddNotes} options={{ headerShown: false }}/>
-        <HomeStack.Screen name='Notes' component={NoteTakerTabNavigator} />
+        <HomeStack.Screen name='NoteTaker' component={NoteTakerScreen} />
         <HomeStack.Screen name='ChatBot' component={ChatBot} />
         <HomeStack.Screen name='Profile' component={EditProfileScreen} />
         <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
@@ -102,68 +105,68 @@ function HomeDrawer() {
 
 
 
-function NoteTakerTabNavigator() {
-  const Tab = createMaterialBottomTabNavigator();
+// function NoteTakerTabNavigator() {
+//   const Tab = createMaterialBottomTabNavigator();
 
-  const theme = useTheme();
-  theme.colors.secondaryContainer = "transparent";
+//   const theme = useTheme();
+//   theme.colors.secondaryContainer = "transparent";
 
-  return (
-    <Tab.Navigator
-      initialRouteName="Notes"
-      activeColor="white"
-      barStyle={{ backgroundColor: "#050A30" }}
-      labeled={false}
-    >
-      <Tab.Screen
-        name="HomeTab"
-        component={NoteTaker}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="home" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={SearchTab}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="magnify" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="AddTab"
-        component={AddTab}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="plus" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="TimerTab"
-        component={TimerTab}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="clock" size={30} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="DNDTab"
-        component={DNDTab}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Icon name="moon-waxing-crescent" size={30} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
+//   return (
+//     <Tab.Navigator
+//       initialRouteName="Notes"
+//       activeColor="white"
+//       barStyle={{ backgroundColor: "#050A30" }}
+//       labeled={false}
+//     >
+//       <Tab.Screen
+//         name="HomeTab"
+//         component={NoteTaker}
+//         options={{
+//           tabBarIcon: ({ color }) => (
+//             <Icon name="home" size={30} color={color} />
+//           ),
+//         }}
+//       />
+//       <Tab.Screen
+//         name="Search"
+//         component={SearchTab}
+//         options={{
+//           tabBarIcon: ({ color }) => (
+//             <Icon name="magnify" size={30} color={color} />
+//           ),
+//         }}
+//       />
+//       <Tab.Screen
+//         name="AddTab"
+//         component={AddTab}
+//         options={{
+//           tabBarIcon: ({ color }) => (
+//             <Icon name="plus" size={30} color={color} />
+//           ),
+//         }}
+//       />
+//       <Tab.Screen
+//         name="TimerTab"
+//         component={TimerTab}
+//         options={{
+//           tabBarIcon: ({ color }) => (
+//             <Icon name="clock" size={30} color={color} />
+//           ),
+//         }}
+//       />
+//       <Tab.Screen
+//         name="DNDTab"
+//         component={DNDTab}
+//         options={{
+//           tabBarIcon: ({ color }) => (
+//             <Icon name="moon-waxing-crescent" size={30} color={color} />
+//           ),
+//         }}
+//       />
+//     </Tab.Navigator>
+//   );
+// }
 
 export default function AppNavigator() {
-  return <AuthStack />;
+  return <HomeDrawer />;
 }

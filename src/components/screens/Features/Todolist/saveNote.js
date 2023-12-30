@@ -30,25 +30,25 @@ export default async function SaveNote(note, navigation){
         try{
             let data = [];
             if(note.id){
-                if(Array.isArray(JSON.parse(await AsyncStorage.getItem('notes')))){
-                    data = JSON.parse(await AsyncStorage.getItem('notes'));
+                if(Array.isArray(JSON.parse(await AsyncStorage.getItem('todoNotes')))){
+                    data = JSON.parse(await AsyncStorage.getItem('todoNotes'));
                 }else{
-                    data.push(JSON.parse(await AsyncStorage.getItem('notes')));
+                    data.push(JSON.parse(await AsyncStorage.getItem('todoNotes')));
                 }
                 data = updateNote(data,note);
-                await AsyncStorage.setItem('notes',JSON.stringify(data));
+                await AsyncStorage.setItem('todoNotes',JSON.stringify(data));
             }else{
                 note.id=(await getKey())
-                if(await AsyncStorage.getItem('notes')==null){
-                    await AsyncStorage.setItem('notes',JSON.stringify(note));
+                if(await AsyncStorage.getItem('todoNotes')==null){
+                    await AsyncStorage.setItem('todoNotes',JSON.stringify(note));
                 }else{
-                    if(Array.isArray(JSON.parse(await AsyncStorage.getItem('notes')))){
-                        data = JSON.parse(await AsyncStorage.getItem('notes'));
+                    if(Array.isArray(JSON.parse(await AsyncStorage.getItem('todoNotes')))){
+                        data = JSON.parse(await AsyncStorage.getItem('todoNotes'));
                     }else{
-                        data.push(JSON.parse(await AsyncStorage.getItem('notes')));
+                        data.push(JSON.parse(await AsyncStorage.getItem('todoNotes')));
                     }
                     data.push(note);
-                    await AsyncStorage.setItem('notes',JSON.stringify(data));
+                    await AsyncStorage.setItem('todoNotes',JSON.stringify(data));
                 }
             }
             navigation.goBack();

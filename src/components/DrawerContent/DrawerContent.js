@@ -11,7 +11,7 @@ const KhenImage = require('../../../assets/KhenImage.png');
 const DrawerList = [
   {icon: 'account-outline', label: 'Home', navigateTo: 'Home'},
   {icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist'},
-  {icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'Notes'},
+  {icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker'},
   {icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot'},
 ];
 
