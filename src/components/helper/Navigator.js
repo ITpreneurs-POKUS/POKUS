@@ -7,6 +7,15 @@ import HomeScreen from "../screens/HomeScreen";
 
 import Todolist from "../screens/Features/Todolist/pages/home/index";
 import AddNotes from "../screens/Features/Todolist/pages/AddNotes/index";
+
+// FLASHCARDS
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import DeckList from "../screens/Features/FlashCards/src/components/DeckList";
+import AddDeck from "../screens/Features/FlashCards/src/components/AddDeck";
+import DeckDetail from "../screens/Features/FlashCards/src/components/DeckDetail";
+import AddCard from "../screens/Features/FlashCards/src/components/AddCard";
+import Quiz from "../screens/Features/FlashCards/src/components/Quiz";
 // import NoteTaker from "../screens/Features/NoteTaker/NoteTaker";
 import ChatBot from "../screens/Features/ChatBot";
 
@@ -15,7 +24,6 @@ import ChatBot from "../screens/Features/ChatBot";
 // import TimerTab from "../screens/Features/NoteTaker/BottomTabs/TimerTab";
 // import DNDTab from "../screens/Features/NoteTaker/BottomTabs/DNDTab";
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DrawerContent from "../DrawerContent/DrawerContent";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -26,8 +34,8 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import NoteTakerScreen from "../screens/Features/NoteTaker/NoteTakerScreen";
 
-
-
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 function AuthStack() {
   const AuthStack = createNativeStackNavigator();
@@ -61,7 +69,7 @@ function HomeStack() {
         },
         headerTintColor: "#fff",
         headerTitleAlign: "center",
-        
+
         headerLeft: () => {
           return (
             <Icon
@@ -72,18 +80,30 @@ function HomeStack() {
             />
           );
         },
-      }}>
-        <HomeStack.Screen name='Home' component={HomeScreen} />
-        <HomeStack.Screen name='Todolist' component={Todolist} />
-        <HomeStack.Screen name='AddNotes' component={AddNotes} options={{ headerShown: false }}/>
-        <HomeStack.Screen name='NoteTaker' component={NoteTakerScreen} />
-        <HomeStack.Screen name='ChatBot' component={ChatBot} />
-        <HomeStack.Screen name='Profile' component={EditProfileScreen} />
-        <HomeStack.Screen options={{ headerShown: false}} name='BackToLanding' component={AuthStack} />
-      </HomeStack.Navigator>
-    );
-  }
-  
+      }}
+    >
+      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen name="FlashCard" component={BottomTabs} />
+      <HomeStack.Screen name="DeckDetail" component={DeckDetail} options={{headerShown: false}} />
+      <HomeStack.Screen name="AddCard" component={AddCard} options={{headerShown: false}} />
+      <HomeStack.Screen name="Quiz" component={Quiz} options={{headerShown: false}} />
+      <HomeStack.Screen name="Todolist" component={Todolist} />
+      <HomeStack.Screen
+        name="AddNotes"
+        component={AddNotes}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen name="NoteTaker" component={NoteTakerScreen} />
+      <HomeStack.Screen name="ChatBot" component={ChatBot} />
+      <HomeStack.Screen name="Profile" component={EditProfileScreen} />
+      <HomeStack.Screen
+        options={{ headerShown: false }}
+        name="BackToLanding"
+        component={AuthStack}
+      />
+    </HomeStack.Navigator>
+  );
+}
 
 function HomeDrawer() {
   const HomeDrawer = createDrawerNavigator();
@@ -102,8 +122,39 @@ function HomeDrawer() {
   );
 }
 
-
-
+function BottomTabs() {
+  return (
+    <Tab.Navigator
+      initialRouteName="DeckList"
+      screenOptions={({ route }) => ({
+        activeTintColor: "tomato",
+        inactiveTintColor: "grey",
+        labelStyle: { paddingBottom: 10, fontSize: 10 },
+      })}
+    >
+      <Tab.Screen
+        name="Deck"
+        component={DeckList}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Icon name="format-list-bulleted" size={30} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddDeck"
+        component={AddDeck}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <Icon name="playlist-plus" size={30} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
 
 // function NoteTakerTabNavigator() {
 //   const Tab = createMaterialBottomTabNavigator();
