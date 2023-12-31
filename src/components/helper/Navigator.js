@@ -84,9 +84,22 @@ function HomeStack() {
     >
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="FlashCard" component={BottomTabs} />
-      <HomeStack.Screen name="DeckDetail" component={DeckDetail} options={{headerShown: false}} />
-      <HomeStack.Screen name="AddCard" component={AddCard} options={{headerShown: false}} />
-      <HomeStack.Screen name="Quiz" component={Quiz} options={{headerShown: false}} />
+      <HomeStack.Screen name="DeckList" component={DeckList} />
+      <HomeStack.Screen
+        name="DeckDetail"
+        component={DeckDetail}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="AddCard"
+        component={AddCard}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen
+        name="Quiz"
+        component={Quiz}
+        options={{ headerShown: false }}
+      />
       <HomeStack.Screen name="Todolist" component={Todolist} />
       <HomeStack.Screen
         name="AddNotes"
@@ -107,7 +120,6 @@ function HomeStack() {
 
 function HomeDrawer() {
   const HomeDrawer = createDrawerNavigator();
-
   return (
     <HomeDrawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
