@@ -87,18 +87,21 @@ const NoteDetail = (props) => {
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={[styles.container, {marginTop: 40}]}
-      >
-        <Text style={styles.time}>
-          {note.isUpdated
-            ? `Updated At ${formatDate(note.time)}`
-            : `Created At ${formatDate(note.time)}`}
-        </Text>
-        <Text style={styles.title}>{note.title}</Text>
-        <Text>----------------------------------------------------------------------------------------------------------------</Text>
-        <Text style={styles.desc}>   {note.desc}</Text>
-      </ScrollView>
+      <View style={{height: 50}}></View>
+      <View style={{flex: 1}}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+        >
+          <Text style={styles.time}>
+            {note.isUpdated
+              ? `Updated At ${formatDate(note.time)}`
+              : `Created At ${formatDate(note.time)}`}
+          </Text>
+          <Text style={styles.title}>{note.title}</Text>
+          <Text>----------------------------------------------------------------------------------------------------------------</Text>
+          <Text style={[styles.desc, {marginTop: 20}]}>   {note.desc}</Text>
+        </ScrollView>
+      </View>
       <View style={styles.btnContainer}>
         <RoundIconBtn
           iconName="trash-can"
@@ -123,17 +126,16 @@ const NoteDetail = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     paddingHorizontal: 15,
+    paddingVertical: 15,
   },
   title: {
-    fontSize: 30,
+    fontSize: 50,
     color: colors.DARK,
     fontWeight: 'bold',
   },
   desc: {
-    fontSize: 20,
-    opacity: 0.6,
+    fontSize: 25,
   },
   time: {
     textAlign: 'right',

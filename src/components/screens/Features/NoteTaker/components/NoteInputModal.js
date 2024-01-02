@@ -63,14 +63,14 @@ const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
               value={title}
               multiline={true}
               onChangeText={text => handleOnChangeText(text, 'title')}
-              placeholder='Title'
+              placeholder='TITLE'
               style={[styles.input, styles.title]}
             />
             <ScrollView>
               <TextInput
                 value={desc}
                 multiline={true}
-                placeholder='Note'
+                placeholder='Body'
                 style={[styles.input, styles.desc]}
                 onChangeText={text => handleOnChangeText(text, 'desc')}
               />
@@ -116,11 +116,13 @@ const styles = StyleSheet.create({
   },
   title: {
     height: 'auto',
-    marginBottom: 15,
+    marginBottom: 50,
     fontWeight: 'bold',
+    fontSize: 50,
   },
   desc: {
     height: 'auto',
+    fontSize: 25,
   },
   modalBG: {
     flex: 1,
