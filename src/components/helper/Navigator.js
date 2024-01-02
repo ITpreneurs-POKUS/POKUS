@@ -231,5 +231,5 @@ function BottomTabs() {
 // }
 
 export default function AppNavigator() {
-  return <HomeDrawer />;
+  return <AuthStack />;
 }
