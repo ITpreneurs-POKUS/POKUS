@@ -10,6 +10,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import reducer from "./src/components/screens/Features/FlashCards/src/reducers";
 import { setLocalNotification } from "../POKUS/src/components/screens/Features/FlashCards/src/utils/helpers";
 import { useEffect } from "react";
+import '@react-native-firebase/app';
+
 
 const middleware = [thunk, logger];
 
