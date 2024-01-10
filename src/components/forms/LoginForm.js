@@ -1,9 +1,10 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ToastAndroid, Keyboard} from 'react-native'
 import React from 'react'
 import { TextInput, Button, IconButton, HelperText } from 'react-native-paper';
-import fetchServices from "../services/fetchServices";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { firebase } from '../../../firebase';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 
 
 export default function LoginForm({navigation}) {
@@ -18,35 +19,38 @@ export default function LoginForm({navigation}) {
 
 
 
-    const handleLogin = async (values, { resetForm }) => {
-
-    try {
-        // console.debug(values);
-        const url = "http://192.168.146.137:8000/api/v1/login";
-
-        const result = await fetchServices.postData(url, values);   
-
-        if (result.message != null) {
-            showToast(result?.message);
-        } else {
-            showToast("Successfully Logged In");
-
-            // Dismiss the keyboard
-            Keyboard.dismiss();
-
-            // Introduce a delay of 2 seconds (adjust the time as needed)
-            setTimeout(() => {
-                navigation.navigate("HomeDrawer");
-            }, 1000);
-
+      const handleLogin = async (values, { resetForm }) => {
+        try {
+          const auth = getAuth();
+          const { email, password } = values;
+      
+          await signInWithEmailAndPassword(auth, email, password);
+      
+          showToast("Successfully Logged In");
+      
+          // Dismiss the keyboard
+          Keyboard.dismiss();
+      
+          // Introduce a delay of 2 seconds (adjust the time as needed)
+          setTimeout(() => {
+            // Navigate to the Login screen
+            navigation.navigate('HomeDrawer');
+    
             // Reset the form
-            resetForm({ values: { email: "", password: "" } });
-            navigation.navigate("Home");
+            resetForm({
+            values: {
+                email: '',
+                password: '',
+            },
+            });
+        }, 1000);
+
+        } catch (error) {
+          showToast(error.message || "Something went wrong");
         }
-        } catch (e) {
-            console.debug(e.toString());
-        }
-    };
+      };
+      
+
 
 
     const validationSchema = Yup.object().shape({
@@ -66,6 +70,19 @@ export default function LoginForm({navigation}) {
     //     password:"",
     //     repassword:"",
     // }
+
+    // const forgetPassword = async (values) => {
+    // try{
+    //     const auth = getAuth();
+    //     const { email } = values;
+
+    //     await sendPasswordResetEmail(auth, email);
+    //     console.log(email)
+    //     alert("Password reset email sent")
+    // }catch (error) {
+    //     showToast(error.message || "Something went wrong");
+    //   }
+    // };
 
     return (
         <Formik 
@@ -179,7 +196,7 @@ export default function LoginForm({navigation}) {
                             <View style={styles.loginContainer}>
                                 <Text style={styles.textStyle}>Don't Have an Account?</Text>
             
-                                <TouchableOpacity onPress={() => navigation.navigate('HomeDrawer')}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
                                 <Text style={[styles.textStyle, styles.loginTextStyle]}>Signup Here</Text>
                                 </TouchableOpacity>
                             </View>

@@ -2,6 +2,7 @@ import { StyleSheet, View, Image, Text } from 'react-native'
 import React from 'react'
 import { Button } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native';
+import { firebase } from '../../../firebase';
 
 
 

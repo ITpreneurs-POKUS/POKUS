@@ -1,23 +1,24 @@
-import React from 'react';
-import {View, StyleSheet, Text, Alert} from 'react-native';
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
-import {Avatar, Title} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Alert } from 'react-native';
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
+import { Avatar, Title } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { firebase } from '../../../firebase';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
-const KhenImage = require('../../../assets/KhenImage.png');
+const KhenImage = require('../../../assets/pfp.png');
 
 const DrawerList = [
-  {icon: 'account-outline', label: 'Home', navigateTo: 'Home'},
-  {icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist'},
-  {icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker'},
-  {icon: 'checkbox-multiple-blank-outline', label: 'FlashCard', navigateTo: 'FlashCard'},
-  {icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot'},
+  { icon: 'account-outline', label: 'Home', navigateTo: 'Home' },
+  { icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist' },
+  { icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker' },
+  { icon: 'checkbox-multiple-blank-outline', label: 'FlashCard', navigateTo: 'FlashCard' },
+  { icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot' },
 ];
 
-
-const DrawerLayout = ({icon, label, navigateTo}) => {
+const DrawerLayout = ({ icon, label, navigateTo }) => {
   const navigation = useNavigation();
   return (
     <DrawerItem
@@ -26,24 +27,23 @@ const DrawerLayout = ({icon, label, navigateTo}) => {
       onPress={() => {
         navigation.navigate(navigateTo);
       }}
-      labelStyle={{color: 'white'}}
+      labelStyle={{ color: 'white' }}
     />
   );
 };
 
-
 const DrawerItems = props => {
-    return DrawerList.map((el, i) => {
-      return (
-        <DrawerLayout
-          key={i}
-          icon={el.icon}
-          label={el.label}
-          navigateTo={el.navigateTo}
-        />
-      );
-    });
-  };
+  return DrawerList.map((el, i) => {
+    return (
+      <DrawerLayout
+        key={i}
+        icon={el.icon}
+        label={el.label}
+        navigateTo={el.navigateTo}
+      />
+    );
+  });
+};
 
 
 function DrawerContent(props) {
@@ -62,8 +62,7 @@ function DrawerContent(props) {
         {
           text: 'Sign Out',
           onPress: () => {
-            // Add logic for signing out here
-            navigation.navigate('BackToLanding');
+            navigation.navigate('BackToLanding')
           },
         },
       ],
@@ -71,22 +70,43 @@ function DrawerContent(props) {
     );
   };
 
+
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    firebase.firestore().collection('users')
+    .doc(firebase.auth().currentUser.uid).get()
+    .then((snapshot) => {
+      if(snapshot.exists) {
+        setFirstname(snapshot.data())
+        setLastname(snapshot.data())
+        setEmail(snapshot.data())
+      } else {
+        console.log('User does not exist')
+      }
+    })
+
+  }, [])
+  
   return (
-    <View style={{flex: 1, backgroundColor: '#050A30'}}>
-      <DrawerContentScrollView {...props} style={{backgroundColor: '#050A30'}}>
+    <View style={{ flex: 1, backgroundColor: '#050A30' }}>
+      <DrawerContentScrollView {...props} style={{ backgroundColor: '#050A30' }}>
         <View style={styles.drawerContent}>
-          <TouchableOpacity activeOpacity={0.8} onPress={ () => navigation.navigate('Profile')}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
             <View style={styles.userInfoSection}>
-              <View style={{flexDirection: 'row', marginTop: 15}}>
+              <View style={{ flexDirection: 'row', marginTop: 15 }}>
                 <Avatar.Image
                   source={KhenImage}
-                  size={50}
-                  style={{marginTop: 5}}
+                  size={60}
+                  backgroundColor='transparent'
+                  style={{ marginTop: 5 }}
                 />
-                <View style={{marginLeft: 10, flexDirection: 'column'}}>
-                  <Title style={styles.title}>Khen Paler</Title>
+                <View style={{ marginLeft: 10, flexDirection: 'column' }}>
+                  <Title style={styles.title}>{firstname.firstname} {lastname.lastname}</Title>
                   <Text style={styles.caption} numberOfLines={1}>
-                    palerkhen@gmail.com
+                    {email.email}
                   </Text>
                 </View>
               </View>
@@ -103,13 +123,14 @@ function DrawerContent(props) {
             <Icon name="exit-to-app" color={'white'} size={size} />
           )}
           label="Sign Out"
-          labelStyle={{color: 'white'}}
+          labelStyle={{ color: 'white' }}
           onPress={handleSignOut}
         />
       </View>
     </View>
   );
 }
+
 export default DrawerContent;
 
 const styles = StyleSheet.create({

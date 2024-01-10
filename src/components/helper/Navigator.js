@@ -16,34 +16,46 @@ import AddDeck from "../screens/Features/FlashCards/src/components/AddDeck";
 import DeckDetail from "../screens/Features/FlashCards/src/components/DeckDetail";
 import AddCard from "../screens/Features/FlashCards/src/components/AddCard";
 import Quiz from "../screens/Features/FlashCards/src/components/Quiz";
-// import NoteTaker from "../screens/Features/NoteTaker/NoteTaker";
 import ChatBot from "../screens/Features/ChatBot";
-
-// import SearchTab from "../screens/Features/NoteTaker/BottomTabs/SearchTab";
-// import AddTab from "../screens/Features/NoteTaker/BottomTabs/AddTab";
-// import TimerTab from "../screens/Features/NoteTaker/BottomTabs/TimerTab";
-// import DNDTab from "../screens/Features/NoteTaker/BottomTabs/DNDTab";
 
 import DrawerContent from "../DrawerContent/DrawerContent";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-// import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-// import { useTheme } from "react-native-paper";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import NoteTakerScreen from "../screens/Features/NoteTaker/NoteTakerScreen";
+import React from "react";
+import { firebase } from '../../../firebase';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function AuthStack() {
+
+
+function AuthStack({ navigation }) {
   const AuthStack = createNativeStackNavigator();
+
+  const [initializing, setInitializing] = React.useState(true);
+  const [user, setUser] = React.useState();
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  React.useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initializing) return null;
 
   return (
     <AuthStack.Navigator
       screenOptions={{ headerShown: false, statusBarColor: "#050A30" }}
     >
+      {/* Authentication Screens */}
       <AuthStack.Screen name="Landing" component={LandingScreen} />
       <AuthStack.Screen name="Login" component={LoginScreen} />
       <AuthStack.Screen name="Signup" component={SignUpScreen} />
@@ -51,10 +63,15 @@ function AuthStack() {
         name="ForgotPassword"
         component={ForgotPasswordScreen}
       />
-      <AuthStack.Screen name="HomeDrawer" component={HomeDrawer} />
+
+      {/* Home Screens */}
+      <AuthStack.Screen name="HomeDrawer" options={{ gestureEnabled: false }}>
+        {(props) => <HomeDrawer {...props} user={user} />}
+      </AuthStack.Screen>
     </AuthStack.Navigator>
   );
 }
+
 
 function HomeStack() {
   const HomeStack = createNativeStackNavigator();
@@ -118,18 +135,16 @@ function HomeStack() {
   );
 }
 
-function HomeDrawer() {
+function HomeDrawer({ user }) {
   const HomeDrawer = createDrawerNavigator();
   return (
     <HomeDrawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <HomeDrawer.Screen
-        name="HomeStack"
-        component={HomeStack}
-        options={{ gestureEnabled: false }}
-      />
+      <HomeDrawer.Screen name="HomeStack">
+        {(props) => <HomeStack {...props} user={user} />}
+      </HomeDrawer.Screen>
     </HomeDrawer.Navigator>
   );
 }
@@ -167,68 +182,6 @@ function BottomTabs() {
     </Tab.Navigator>
   );
 }
-
-// function NoteTakerTabNavigator() {
-//   const Tab = createMaterialBottomTabNavigator();
-
-//   const theme = useTheme();
-//   theme.colors.secondaryContainer = "transparent";
-
-//   return (
-//     <Tab.Navigator
-//       initialRouteName="Notes"
-//       activeColor="white"
-//       barStyle={{ backgroundColor: "#050A30" }}
-//       labeled={false}
-//     >
-//       <Tab.Screen
-//         name="HomeTab"
-//         component={NoteTaker}
-//         options={{
-//           tabBarIcon: ({ color }) => (
-//             <Icon name="home" size={30} color={color} />
-//           ),
-//         }}
-//       />
-//       <Tab.Screen
-//         name="Search"
-//         component={SearchTab}
-//         options={{
-//           tabBarIcon: ({ color }) => (
-//             <Icon name="magnify" size={30} color={color} />
-//           ),
-//         }}
-//       />
-//       <Tab.Screen
-//         name="AddTab"
-//         component={AddTab}
-//         options={{
-//           tabBarIcon: ({ color }) => (
-//             <Icon name="plus" size={30} color={color} />
-//           ),
-//         }}
-//       />
-//       <Tab.Screen
-//         name="TimerTab"
-//         component={TimerTab}
-//         options={{
-//           tabBarIcon: ({ color }) => (
-//             <Icon name="clock" size={30} color={color} />
-//           ),
-//         }}
-//       />
-//       <Tab.Screen
-//         name="DNDTab"
-//         component={DNDTab}
-//         options={{
-//           tabBarIcon: ({ color }) => (
-//             <Icon name="moon-waxing-crescent" size={30} color={color} />
-//           ),
-//         }}
-//       />
-//     </Tab.Navigator>
-//   );
-// }
 
 export default function AppNavigator() {
   return <AuthStack />;

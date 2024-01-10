@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Notifications } from "expo";
+import * as Notifications from 'expo-notifications';
 
 const NOTIFICATION_KEY = "MobileFlashcard:notifications";
 const CHANNEL_ID = "DailyReminder";

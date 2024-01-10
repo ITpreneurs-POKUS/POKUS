@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, ToastAndroid, Keyboard } from 'react-native'
 import React from 'react'
 import { TextInput, Button, IconButton, HelperText } from 'react-native-paper';
-import fetchServices from "../services/fetchServices";
 import { Formik } from 'formik';
 import * as Yup from "yup";
+import { firebase } from '../../../firebase';
 
-export default function SignUpForm({navigation}) {
+export default function SignUpForm({navigation, onSignup}) {
 
     const [showPass, setShowPass] = React.useState(true);
     const [showRePass, setShowRePass] = React.useState(true);
@@ -14,45 +14,59 @@ export default function SignUpForm({navigation}) {
         ToastAndroid.show(message, 3000);
     };
 
-    const handleRegistration = async (values, { resetForm }) => {
+    const handleRegistration = async ( values, {resetForm} ) => {
+        // Destructure the required fields directly from the values object
+        const { firstname, lastname, email, password } = values;
+      
+        await firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then(() => {
+            // Send email verification
+            return firebase.auth().currentUser.sendEmailVerification({
+              handleCodeInApp: true,
+              url: 'https://pokus-b9a9f.firebaseapp.com',
+            });
+          })
+          .then(() => {
+            showToast('Verification email sent');
+          }).catch((error) => {
+            showToast(error.message)
+          })
+          .then(() => {
+            // Store additional user information in Firestore
+             firebase.firestore().collection('users')
+             .doc(firebase.auth().currentUser.uid)
+             .set({
+                firstname,
+                lastname,
+                email,
+              });
+            
+            // Dismiss the keyboard
+            Keyboard.dismiss();
+
+            // Introduce a delay of 2 seconds (adjust the time as needed)
+            setTimeout(() => {
+                // Navigate to the Login screen
+                navigation.navigate('Login');
         
-    try {
-        // console.debug(values);
-        const url = "http://192.168.146.137:8000/api/v1/register";
-
-        const data = {
-            ...values,
-            password_confirmation: values.repassword,
-        };
-          
-
-        const result = await fetchServices.postData(url, data);
-        
-            if (result.message != null) {
-                showToast(result?.message);
-
-                Keyboard.dismiss();
-
-                // Introduce a delay of 2 seconds (adjust the time as needed)
-                setTimeout(() => {
-                navigation.navigate("Login");
-                }, 1000);
-
-                 
-                 // Reset the form
-                 resetForm({ values: { firstname: "",
-                                        lastname:"",
-                                        email:"",
-                                        password:"",
-                                        repassword:"",
-                                     }});
-            } 
-
-            } catch (e) {  
-                showToast(e.toString());
-            }
-    };
-
+                // Reset the form
+                resetForm({
+                values: {
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    password: '',
+                    repassword: '',
+                },
+                });
+            }, 1000);
+          })
+          .catch((error) => {
+            // Handle errors
+            showToast(error.message || 'Something went wrong');
+          });
+      };      
+      
 
     const validationSchema = Yup.object().shape({
         firstname: Yup.string()
@@ -87,8 +101,8 @@ export default function SignUpForm({navigation}) {
   return (
     <Formik 
             initialValues={initialValues}
-            onSubmit={async (values, { resetForm, setErrors }) => {
-                await handleRegistration(values, { resetForm, setErrors });
+            onSubmit={async ( values, {resetForm} ) => {
+                await handleRegistration( values, {resetForm} );
             }}
             validationSchema={validationSchema}
         >

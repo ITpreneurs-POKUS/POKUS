@@ -1,8 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, TextInput } from "react-native";
 import { PaperProvider } from "react-native-paper";
+import { firebase } from '../../../firebase';
 
 export default function EditProfileScreen({ navigation }) {
+
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    firebase.firestore().collection('users')
+    .doc(firebase.auth().currentUser.uid).get()
+    .then((snapshot) => {
+      if(snapshot.exists) {
+        setFirstname(snapshot.data())
+        setLastname(snapshot.data())
+        setEmail(snapshot.data())
+      } else {
+        console.log('User does not exist')
+      }
+    })
+  }, [])
+
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -20,22 +40,31 @@ export default function EditProfileScreen({ navigation }) {
               placeholder="First Name"
               style={styles.firstnameSettings}
               placeholderTextColor="#888888" 
+              value={firstname.firstname}
+              onChangeText={(text) => setFirstname(text)}
+              editable={false}
             />
             <TextInput
               placeholder="Last Name"
               style={styles.lastnameSettings}
               placeholderTextColor="#888888" 
+              value={lastname.lastname}
+              onChangeText={(text) => setLastname(text)}
+              editable={false}
             />
             <TextInput
               placeholder="Email"
               keyboardType="email-address"
               style={styles.emailSettings}
               placeholderTextColor="#888888" 
+              value={email.email}
+              onChangeText={(text) => setEmail(text)}
+              editable={false}
             />
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} style={styles.boxEditProfile}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} style={styles.boxEditProfile}>
             <Text style={styles.editProfileText}>Edit Profile</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </PaperProvider>
@@ -74,26 +103,26 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 20,
   },
-  boxEditProfile: {
-    backgroundColor: "#233DFD",
-    padding: 15,
-    borderRadius: 30,
-    width: 250,
-    marginBottom: 15,
-    alignSelf: "center",
-  },
-  editProfileText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 18,
-  },
+  // boxEditProfile: {
+  //   backgroundColor: "#233DFD",
+  //   padding: 15,
+  //   borderRadius: 30,
+  //   width: 250,
+  //   marginBottom: 15,
+  //   alignSelf: "center",
+  // },
+  // editProfileText: {
+  //   color: "white",
+  //   fontWeight: "bold",
+  //   textAlign: "center",
+  //   fontSize: 18,
+  // },
   firstnameSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
     marginTop:40,
   },
   lastnameSettings: {
@@ -101,13 +130,13 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
   },
   emailSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 60,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
   },
 });
