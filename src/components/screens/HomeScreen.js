@@ -10,8 +10,32 @@ import {
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { firebase } from '../../../firebase';
 
 export default function HomeScreen({ navigation }) {
+
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+
+  useEffect(() => {
+    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+  
+    // Set up a real-time listener for user data
+    const unsubscribe = userDocRef.onSnapshot((snapshot) => {
+      if (snapshot.exists) {
+        setFirstname(snapshot.data().firstname);
+        setLastname(snapshot.data().lastname);
+      } else {
+        console.log('User does not exist');
+      }
+    });
+  
+    // Cleanup the listener when the component unmounts
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const randomQuote = () => {
     if (isLoading) {
       return;
@@ -21,7 +45,6 @@ export default function HomeScreen({ navigation }) {
     fetch("https://api.quotable.io/random")
       .then((res) => res.json())
       .then((result) => {
-        console.log(result.content);
         setQuote(result.content);
         setAuthor(result.author);
       })
@@ -33,13 +56,25 @@ export default function HomeScreen({ navigation }) {
       });
   };
 
-  useEffect(() => {
-    randomQuote();
+  useEffect( () => {
+     randomQuote();
   }, []);
 
   const [Quote, setQuote] = useState("Loading...");
   const [Author, setAuthor] = useState("Loading...");
   const [isLoading, setIsLoading] = useState(false);
+  const [greet, setGreet] = useState('');
+
+  const findGreet = () => {
+    const hrs = new Date().getHours();
+    if (hrs === 0 || hrs < 12) return setGreet('Morning');
+    if (hrs === 1 || hrs < 17) return setGreet('Afternoon');
+    setGreet('Evening');
+  };
+
+  useEffect(() => {
+    findGreet();
+  }, []);
 
   return (
     <PaperProvider>
@@ -52,11 +87,19 @@ export default function HomeScreen({ navigation }) {
           />
         </View>
         <View style={styles.box1}>
+          <View style={{alignSelf:'center', marginTop: 80}}>
+            <Text style={{
+              fontSize: 25,
+              fontWeight:'bold', 
+              textAlign:'center',
+              color:'black',
+              }}>{`Good ${greet}!`}</Text>
+          </View>
           <TouchableOpacity
             onPress={() => navigation.navigate("Profile")}
             style={styles.boxUsername}
           >
-            <Text style={styles.usernameSettings}>Febby Malacaste</Text>
+            <Text style={styles.usernameSettings}>{`${firstname} ${lastname}`}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.box2}>
@@ -119,18 +162,18 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 250,
     height: 60,
-    marginTop: 60,
+    marginTop: 10,
     alignSelf: "center",
   },
   box1: {
-    marginTop: -70,
+    marginTop: -100,
     width: width * 0.8,
-    height: 130,
+    height: 200,
     backgroundColor: "#ffffff",
     borderRadius: 10,
   },
   usernameSettings: {
-    marginTop: 20,
+    marginTop: 15,
     alignSelf: "center",
     textAlign: "center",
     fontSize: 20,
@@ -141,7 +184,7 @@ const styles = StyleSheet.create({
   box2: {
     marginTop: 10,
     width: width * 0.8,
-    height: 350,
+    height: 'auto',
     backgroundColor: "#233DFD",
     borderRadius: 10,
     overflow: "hidden",
@@ -184,6 +227,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30,
     width: 250,
+    marginTop: 15,
     marginBottom: 15,
     alignSelf: "center",
   },

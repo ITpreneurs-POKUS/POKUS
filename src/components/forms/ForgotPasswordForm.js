@@ -1,8 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ToastAndroid } from 'react-native'
 import React from 'react'
 import { TextInput, Button, IconButton } from 'react-native-paper';
+import { firebase } from '../../../firebase';
 
 export default function ForgotPasswordForm({navigation}) {
+
+    const [email, setEmail] = React.useState('');
+
+    const showToast = (message = "Something wen't wrong") => {
+        ToastAndroid.show(message, 3000);
+      };
+    
+
+    const forgetPassword = async () => {
+        try {
+            await firebase.auth().sendPasswordResetEmail(email);
+            showToast("Password reset email sent");
+
+            // Reset TextInput
+            setEmail('');
+
+            // Navigate to the login screen after a delay (adjust the time as needed)
+            setTimeout(() => {
+                navigation.navigate('Login');
+            }, 1000);
+        } catch (error) {
+            showToast(error.message || "Something went wrong");
+        }
+    }
+
 
   return (
     <View style={styles.container}>
@@ -36,9 +62,11 @@ export default function ForgotPasswordForm({navigation}) {
             style={styles.textInputStyle}
             mode='outlined'
             placeholder='Your Email'
+            onChangeText={(email) => setEmail(email)}
             />
 
             <Button 
+            onPress={() => {forgetPassword()}}
             style={styles.buttonStyle} 
             mode='contained'
                 >GET PASSWORD

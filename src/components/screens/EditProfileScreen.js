@@ -1,8 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, TextInput, Alert } from "react-native";
 import { PaperProvider } from "react-native-paper";
+import { firebase } from '../../../firebase';
 
 export default function EditProfileScreen({ navigation }) {
+
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [initialUserData, setInitialUserData] = useState({});
+
+  useEffect(() => {
+    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+
+    userDocRef.get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          const userData = snapshot.data();
+          setInitialUserData(userData); // Store initial data separately
+          setFirstname(userData.firstname || '');
+          setLastname(userData.lastname || '');
+          setEmail(userData.email || '');
+        } else {
+          console.log('User does not exist');
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching user data: ', error);
+      });
+  }, []);
+
+  const updateUserProfile = () => {
+    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+  
+    userDocRef
+      .set({
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+      }, { merge: true }) // Use merge: true to merge with existing data
+      .then(() => {
+        console.log('User data updated successfully');
+        Alert.alert('Success', 'User data updated successfully');
+      })
+      .catch((error) => {
+        console.error('Error updating user data: ', error);
+        Alert.alert('Error', 'Failed to update user data');
+      });
+  };
+
   return (
     <PaperProvider>
       <View style={styles.container}>
@@ -20,22 +66,34 @@ export default function EditProfileScreen({ navigation }) {
               placeholder="First Name"
               style={styles.firstnameSettings}
               placeholderTextColor="#888888" 
+              value={firstname.firstname}
+              onChangeText={(text) => setFirstname(text)}
+              
             />
             <TextInput
               placeholder="Last Name"
               style={styles.lastnameSettings}
               placeholderTextColor="#888888" 
+              value={lastname.lastname}
+              onChangeText={(text) => setLastname(text)}
+              
             />
             <TextInput
               placeholder="Email"
               keyboardType="email-address"
               style={styles.emailSettings}
               placeholderTextColor="#888888" 
+              value={email.email}
+              onChangeText={(text) => setEmail(text)}
+              editable={false}
             />
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} style={styles.boxEditProfile}>
-            <Text style={styles.editProfileText}>Edit Profile</Text>
+          <TouchableOpacity onPress={updateUserProfile} style={styles.boxEditProfile}>
+            <Text style={styles.editProfileText}>Update Profile</Text>
           </TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => navigation.navigate("EditProfile")} style={styles.boxEditProfile}>
+            <Text style={styles.editProfileText}>Edit Profile</Text>
+          </TouchableOpacity> */}
         </View>
       </View>
     </PaperProvider>
@@ -74,26 +132,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingHorizontal: 20,
   },
-  boxEditProfile: {
-    backgroundColor: "#233DFD",
-    padding: 15,
-    borderRadius: 30,
-    width: 250,
-    marginBottom: 15,
-    alignSelf: "center",
-  },
-  editProfileText: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 18,
-  },
   firstnameSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
     marginTop:40,
   },
   lastnameSettings: {
@@ -101,13 +145,25 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
   },
   emailSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 60,
-    paddingLeft: 10, 
+    paddingLeft: 20, 
+  },
+  boxEditProfile: {
+    backgroundColor: "#233DFD",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  editProfileText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
   },
 });

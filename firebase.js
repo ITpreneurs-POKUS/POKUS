@@ -1,21 +1,23 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCiEn8bdgD99NCQksTlwFeVL_pjavnkuVQ",
-  authDomain: "authapp-344df.firebaseapp.com",
-  projectId: "authapp-344df",
-  storageBucket: "authapp-344df.appspot.com",
-  messagingSenderId: "547342736165",
-  appId: "1:547342736165:web:94853dd3f81441a6f718cc"
+  apiKey: "AIzaSyDKb6DuEOaKvAkxoHxYiJ3j4R4ScEcO5p0",
+  authDomain: "pokus-b9a9f.firebaseapp.com",
+  projectId: "pokus-b9a9f",
+  storageBucket: "pokus-b9a9f.appspot.com",
+  messagingSenderId: "243908892146",
+  appId: "1:243908892146:web:c58853bef34e804773476b"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
 
-export{storage} 
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+export { firebase };

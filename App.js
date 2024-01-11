@@ -10,8 +10,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import reducer from "./src/components/screens/Features/FlashCards/src/reducers";
 import { setLocalNotification } from "../POKUS/src/components/screens/Features/FlashCards/src/utils/helpers";
 import { useEffect } from "react";
-import '@react-native-firebase/app';
-
+import { firebase } from './firebase';
 
 const middleware = [thunk, logger];
 
@@ -25,13 +24,13 @@ const App = () => {
     setLocalNotification();
   }, []);
   return (
-    <Provider store={store}>
-      <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </SafeAreaView>
-    </Provider>
+      <Provider store={store}>
+        <SafeAreaView style={styles.container}>
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </SafeAreaView>
+      </Provider>
   );
 };
 
