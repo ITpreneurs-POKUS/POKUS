@@ -66,7 +66,7 @@ export default function EditProfileScreen({ navigation }) {
               placeholder="First Name"
               style={styles.firstnameSettings}
               placeholderTextColor="#888888" 
-              value={firstname.firstname}
+              value={firstname}
               onChangeText={(text) => setFirstname(text)}
               
             />
@@ -74,7 +74,7 @@ export default function EditProfileScreen({ navigation }) {
               placeholder="Last Name"
               style={styles.lastnameSettings}
               placeholderTextColor="#888888" 
-              value={lastname.lastname}
+              value={lastname}
               onChangeText={(text) => setLastname(text)}
               
             />
@@ -83,7 +83,7 @@ export default function EditProfileScreen({ navigation }) {
               keyboardType="email-address"
               style={styles.emailSettings}
               placeholderTextColor="#888888" 
-              value={email.email}
+              value={email}
               onChangeText={(text) => setEmail(text)}
               editable={false}
             />
