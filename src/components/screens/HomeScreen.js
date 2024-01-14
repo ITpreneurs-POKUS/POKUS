@@ -153,8 +153,6 @@ export default function HomeScreen({ navigation }) {
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
-    borderColor: 'green',
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
@@ -203,7 +201,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     backgroundColor: "#233DFD",
     borderRadius: 10,
-    overflow: "scroll",
+    overflow: "hidden",
   },
   scrollContainer: {
     justifyContent: "space-between",
