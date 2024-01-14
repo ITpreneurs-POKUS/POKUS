@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Pokus",
+    "slug": "pokus",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/PokusLogo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/SplashScreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#050A30"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "useNextNotificationsApi": true,
+        "foregroundImage": "./assets/PokusLogo.png",
+        "backgroundColor": "#ffffff",
+        "permissions": [
+          "NOTIFICATIONS"
+        ]
+      },
+      "package": "com.pokus.app"
+    },
+    "web": {
+      "allowNotifications": true,
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8746ef83-f341-4549-846d-8d8a78238008"
+      }
+    },
+    "owner": "khenpaler101"
+  }
+}
