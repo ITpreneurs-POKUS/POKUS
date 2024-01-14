@@ -4,9 +4,6 @@ import { TextInput, Button, IconButton, HelperText } from 'react-native-paper';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { firebase } from '../../../firebase';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 
 
 export default function LoginForm({navigation}) {
@@ -19,40 +16,6 @@ export default function LoginForm({navigation}) {
         ToastAndroid.show(message, 3000);
       };
 
-    
-    const saveValueFunction = async (values) => {
-            if (values.email) {
-                await AsyncStorage.setItem('user_email', values.email);
-            }
-
-            if (values.password) {
-                await AsyncStorage.setItem('user_password', values.password);
-            }
-        };
-
-    const getValueFunction = async (values, { resetForm }) => {
-        let savedEmail, savedPassword;
-    
-        try {
-          savedEmail = await AsyncStorage.getItem('user_email');
-          savedPassword = await AsyncStorage.getItem('user_password');
-
-          console.log(savedEmail);
-          console.log(savedPassword);
-        } catch (error) {
-          console.error('Error retrieving data from AsyncStorage:', error);
-        }
-    
-        if (savedEmail && savedPassword) {
-          // Use the saved email and password for Firebase login
-          await handleLogin({ email: savedEmail, password: savedPassword }, { resetForm });
-        } else {
-          // No saved email or password, proceed with regular login
-          await handleLogin(values, { resetForm });
-        }
-      };
-
-
       const handleLogin = async (values, { resetForm }) => {
         try {
           const { email, password } = values;
@@ -64,7 +27,7 @@ export default function LoginForm({navigation}) {
           // Dismiss the keyboard
           Keyboard.dismiss();
     
-          // Introduce a delay of 2 seconds (adjust the time as needed)
+        // Introduce a delay of 2 seconds (adjust the time as needed)
         //   setTimeout(() => {
         //     // Navigate to the Login screen
         //     navigation.navigate('HomeDrawer');
@@ -98,8 +61,7 @@ export default function LoginForm({navigation}) {
         <Formik 
             initialValues={{email: "", password: ""}}
             onSubmit={async (values, { resetForm }) => {
-                await saveValueFunction(values);
-                await getValueFunction(values, { resetForm });
+                await handleLogin(values, { resetForm });
             }}
             validationSchema={validationSchema}
         >

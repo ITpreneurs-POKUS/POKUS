@@ -12,6 +12,7 @@ import reducer from "./src/components/screens/Features/FlashCards/src/reducers";
 // import { setLocalNotification } from "../POKUS/src/components/screens/Features/FlashCards/src/utils/helpers";
 // import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
+import HomeDrawer from "./src/components/helper/Navigator";
 
 
 
@@ -31,7 +32,7 @@ const App = () => {
           <PaperProvider>
             <SafeAreaView style={styles.container}>
               <NavigationContainer>
-                <AppNavigator />
+                <HomeDrawer />
               </NavigationContainer>
             </SafeAreaView>
           </PaperProvider>
