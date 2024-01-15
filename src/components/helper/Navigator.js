@@ -28,10 +28,11 @@ import NoteTakerScreen from "../screens/Features/NoteTaker/NoteTakerScreen";
 import React from "react";
 import { firebase } from '../../../firebase';
 import { LogBox } from "react-native";
+import SendEmailScreen from "../screens/SendEmailScreen";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
 
 
 function AuthStack({ navigation }) {
@@ -93,6 +94,7 @@ function HomeDrawer({ user }) {
   );
 }
 
+
 function HomeStack() {
   const HomeStack = createNativeStackNavigator();
   const navigation = useNavigation();
@@ -146,6 +148,7 @@ function HomeStack() {
         options={{ headerShown: false }}
       />
       <HomeStack.Screen name="Profile" component={EditProfileScreen} />
+      <HomeStack.Screen name="Email" component={SendEmailScreen} />
       <HomeStack.Screen
         options={{ headerShown: false }}
         name="BackToLanding"

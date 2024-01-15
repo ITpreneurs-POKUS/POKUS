@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { firebase } from '../../../firebase';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-export default function SignUpForm({navigation}) {
+export default function SignUpForm({navigation, onSignup}) {
 
     const [showPass, setShowPass] = React.useState(true);
     const [showRePass, setShowRePass] = React.useState(true);
@@ -45,6 +45,22 @@ export default function SignUpForm({navigation}) {
             // Dismiss the keyboard
             Keyboard.dismiss();
 
+            // Introduce a delay of 2 seconds (adjust the time as needed)
+            // setTimeout(() => {
+            //     // Navigate to the Login screen
+            //     navigation.navigate('Login');
+        
+            //     // Reset the form
+            //     resetForm({
+            //     values: {
+            //         firstname: '',
+            //         lastname: '',
+            //         email: '',
+            //         password: '',
+            //         repassword: '',
+            //     },
+            //     });
+            // }, 1000);
           })
           .catch((error) => {
             // Handle errors

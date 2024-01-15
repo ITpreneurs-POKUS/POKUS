@@ -21,10 +21,15 @@
       "adaptiveIcon": {
         "useNextNotificationsApi": true,
         "foregroundImage": "./assets/PokusLogo.png",
-        "backgroundColor": "#ffffff",
+        "backgroundColor": "#050A30",
         "permissions": [
           "NOTIFICATIONS"
-        ]
+        ],
+        "splash": {
+          "image": "./assets/SplashScreen.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#050A30"
+        }
       },
       "package": "com.pokus.app"
     },

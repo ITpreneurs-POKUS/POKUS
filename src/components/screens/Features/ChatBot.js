@@ -17,7 +17,7 @@ import { ActivityIndicator } from 'react-native';
 export default function ChatBot() {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const apiKey = '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';
+  const apiKey = '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';
   const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
   const [textInput, setTextInput] = React.useState('');
 

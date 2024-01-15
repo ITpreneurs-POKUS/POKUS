@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { firebase } from '../../../firebase';
-import EditProfileScreen from '../screens/EditProfileScreen';
 
 const KhenImage = require('../../../assets/pfp.png');
 
@@ -48,6 +47,10 @@ const DrawerItems = props => {
 
 function DrawerContent(props) {
   const navigation = useNavigation();
+
+  const handleSendEmail = () => {
+    navigation.navigate("Email");
+  }
 
   const handleSignOut = () => {
     // Display an alert when the "Sign Out" button is pressed
@@ -126,6 +129,16 @@ function DrawerContent(props) {
           </View>
         </View>
       </DrawerContentScrollView>
+      <View style={[styles.bottomDrawerSection, {top: 15}]}>
+        <DrawerItem
+          icon={({ size }) => (
+            <Icon name="chat-alert-outline" color={'white'} size={size} />
+          )}
+          label="Send Email"
+          labelStyle={{ color: 'white' }}
+          onPress={handleSendEmail}
+        />
+      </View>
       <View style={styles.bottomDrawerSection}>
         <DrawerItem
           icon={({ size }) => (
@@ -183,8 +196,6 @@ const styles = StyleSheet.create({
   },
   bottomDrawerSection: {
     marginBottom: 15,
-    borderTopColor: '#dedede',
-    borderTopWidth: 1,
     borderBottomColor: '#dedede',
     borderBottomWidth: 1,
     backgroundColor: '#050A30',

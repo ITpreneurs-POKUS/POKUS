@@ -134,16 +134,17 @@ export default function HomeScreen({ navigation }) {
             >
               — {Author}
             </Text>
+          
+            <TouchableOpacity
+              onPress={randomQuote}
+              style={styles.newquoteButton}
+              disabled={isLoading}
+            >
+              <Text style={styles.newquotebuttonText}>
+                {isLoading ? "Loading..." : "New Quote"}
+              </Text>
+            </TouchableOpacity>
           </ScrollView>
-          <TouchableOpacity
-            onPress={randomQuote}
-            style={styles.newquoteButton}
-            disabled={isLoading}
-          >
-            <Text style={styles.newquotebuttonText}>
-              {isLoading ? "Loading..." : "New Quote"}
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
     </PaperProvider>

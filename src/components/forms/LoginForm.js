@@ -16,35 +16,23 @@ export default function LoginForm({navigation}) {
         ToastAndroid.show(message, 3000);
       };
 
-      const handleLogin = async (values, { resetForm }) => {
-        try {
-          const { email, password } = values;
-    
-          await firebase.auth().signInWithEmailAndPassword(email, password);
-    
-          showToast("Successfully Logged In");
-    
-          // Dismiss the keyboard
-          Keyboard.dismiss();
-    
-        // Introduce a delay of 2 seconds (adjust the time as needed)
-        //   setTimeout(() => {
-        //     // Navigate to the Login screen
-        //     navigation.navigate('HomeDrawer');
-    
-        //     // Reset the form
-        //     resetForm({
-        //       values: {
-        //         email: '',
-        //         password: '',
-        //       },
-        //     });
-        //   }, 1000);
-    
-        } catch (error) {
-          showToast(error.message || "Something went wrong");
-        }
-      };
+
+
+    const handleLogin = async (values, { resetForm }) => {
+    try {
+        const { email, password } = values;
+
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+
+        showToast("Successfully Logged In");
+
+        // Dismiss the keyboard
+        Keyboard.dismiss();
+
+    } catch (error) {
+        showToast(error.message || "Something went wrong");
+    }
+    };
       
 
     const validationSchema = Yup.object().shape({
