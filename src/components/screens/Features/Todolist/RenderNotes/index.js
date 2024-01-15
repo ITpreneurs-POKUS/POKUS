@@ -9,13 +9,6 @@ function renderNote({ item, navigation }) {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-
-  const formatTime = (date) => {
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${hours}:${minutes}`;
-  };
-
   return (
     <TouchableOpacity
       style={styles.noteArea}
@@ -23,8 +16,8 @@ function renderNote({ item, navigation }) {
         navigation.navigate("AddNotes", { note: item, search: true })
       }
     >
-      <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
-        <View style={{flex: 3}}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flex: 3 }}>
           <View>
             <Text style={styles.textNoteTitle} numberOfLines={5}>
               {item.title}
@@ -39,14 +32,10 @@ function renderNote({ item, navigation }) {
 
         {item.notificationId !== null && (
           <View style={{ flexDirection: "column", flex: 3 }}>
-            <Feather name="bell" size={15} color="#fff" style={{right:0, position: 'absolute'}} />
+            <Feather name="bell" size={15} color="#fff" style={{ right: 0, position: 'absolute' }} />
             <View style={styles.dateContainer}>
               <Text style={[styles.date]}>
-                Date: {formatDate(new Date(item.date))}
-              </Text>
-              <Text> </Text>
-              <Text style={styles.date}>
-                Time: {formatTime(new Date(item.date))}
+                Created: {formatDate(new Date(item.date))}
               </Text>
             </View>
           </View>

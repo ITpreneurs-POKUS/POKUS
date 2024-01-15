@@ -14,20 +14,22 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ActivityIndicator } from 'react-native';
 
+
 export default function ChatBot() {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const apiKey = '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';
-  const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
+  const apiKey = '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';
+  const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-002/completions';
   const [textInput, setTextInput] = React.useState('');
 
   const handleSend = async () => {
-    setLoading(true); 
+    setLoading(true);
     const prompt = textInput;
     try {
       const response = await axios.post(
         apiUrl,
         {
+          model:"gpt-3.5-turbo",
           prompt: prompt,
           max_tokens: 1024,
           temperature: 0.5,
@@ -45,6 +47,7 @@ export default function ChatBot() {
       Keyboard.dismiss();
     } catch (error) {
       console.error('Error fetching data:', error);
+      console.log('Error details:', error.response.data); // Log additional details
     } finally {
       setLoading(false);
     }
