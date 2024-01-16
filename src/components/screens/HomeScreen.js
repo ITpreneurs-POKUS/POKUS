@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   boxUsername: {
     backgroundColor: "#233DFD",
-    borderRadius: 50,
+    borderRadius: 20,
     width: 'auto',
     height: 'auto',
     padding: 15,

@@ -32,7 +32,11 @@
           "backgroundColor": "#050A30"
         }
       },
-      "package": "com.pokus.app"
+      "package": "com.pokus.app",
+      "notification": {
+        "androidMode": "default",
+        "sound": true
+      }
     },
     "web": {
       "allowNotifications": true,

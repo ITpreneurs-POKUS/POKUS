@@ -20,7 +20,10 @@ const style = StyleSheet.create({
         elevation: 5
 
     },
-
+    modalText:{
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
     modalButtons: {
         flexDirection:'row',
         justifyContent: 'space-around',
@@ -41,6 +44,12 @@ const style = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
+    titleformat:{
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: 'center'
+    },
+
     buttonCancel: {
         backgroundColor: '#c70000'
     },

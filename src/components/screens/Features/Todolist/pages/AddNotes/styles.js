@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   body: {
-    margin: 20,
+    width: '90%'
   },
   headerTitle: {
     flex: 1,
@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     color: "#000",
-    width: 400,
     height: 150,
   },
 

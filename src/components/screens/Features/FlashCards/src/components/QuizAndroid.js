@@ -154,7 +154,7 @@ const QuizAndroid = ({ deck }) => {
           style={[styles.submitContainer, { marginBottom: 20 }]}
           onPress={() => {
             handleReset();
-            navigation.navigate("DeckList");
+            navigation.navigate("FlashCard");
           }}
         >
           <Text style={{ fontWeight: "bold", fontSize: 20, color: "#101A6B" }}>
