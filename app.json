@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/PokusLogo.png",
         "backgroundColor": "#050A30",
         "permissions": [
-          "NOTIFICATIONS"
+          "NOTIFICATIONS",
+          "READ_EXTERNAL_STORAGE"
         ],
         "splash": {
           "image": "./assets/SplashScreen.png",

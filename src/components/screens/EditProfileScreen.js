@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, TextInput, Alert, ToastAndroid } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import { firebase } from '../../../firebase';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function EditProfileScreen({ navigation }) {
 
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
   };
+  
+  const [profileImage, setProfileImage] = useState(null);
 
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
@@ -25,6 +28,7 @@ export default function EditProfileScreen({ navigation }) {
           setFirstname(userData.firstname || '');
           setLastname(userData.lastname || '');
           setEmail(userData.email || '');
+          setProfileImage(userData.profileImage || null);
         } else {
           console.log('User does not exist');
         }
@@ -34,14 +38,42 @@ export default function EditProfileScreen({ navigation }) {
       });
   }, []);
 
-  const updateUserProfile = () => {
+  const uploadImage = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        console.error('Permission to access media library denied');
+        showToast("Permission to access media library denied");
+        return;
+      }
+
+      const imagePickerResponse = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!imagePickerResponse.cancelled) {
+        // Handle the image picker response
+        const uri = imagePickerResponse.uri;
+        setProfileImage(uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      showToast("Error picking image");
+    }
+  };
+
+  const updateUserProfile = async () => {
     const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
 
     // Check if any of the required fields (firstname, lastname) is empty
     if (!firstname || !lastname) {
       showToast("Please provide all required information");
       return;
-  }
+      }
   
     userDocRef
       .set({
@@ -57,18 +89,52 @@ export default function EditProfileScreen({ navigation }) {
         console.error('Error updating user data: ', error);
         showToast(error.message || "Failed to update user data");
       });
+    
+      try {
+        if (profileImage) {
+          const response = await fetch(profileImage);
+          const blob = await response.blob();
+    
+          const storage = firebase.storage();
+          const storageRef = storage.ref();
+          const fileName = `profile_images/${firebase.auth().currentUser.uid}/${Date.now()}.jpg`;
+    
+          const uploadTask = storageRef.child(fileName).put(blob);
+    
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log(`Upload is ${progress}% done`);
+            },
+            (error) => {
+              console.error('Error uploading image:', error);
+            },
+            () => {
+              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                userDocRef.update({ profileImage: downloadURL });
+              });
+            }
+          );
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        showToast("Failed to update profile image");
+      }
   };
 
   return (
     <PaperProvider>
       <View style={styles.container}>
-        <View style={styles.profileImage}>
-          <Image
-            source={require("././../../../assets/pfp.png")}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </View>
+        <TouchableOpacity onPress={uploadImage} style={{zIndex: 1}}>
+          <View style={styles.profileImage}>
+            {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.image} resizeMode="cover" />
+            ) : (
+              <Image source={require("././../../../assets/pfp.png")} style={styles.image} resizeMode="cover" />
+            )}
+          </View>
+        </TouchableOpacity>
         <View style={styles.box1}>
           <View style={styles.inputContainer}>
             <TextInput
@@ -121,12 +187,16 @@ const styles = StyleSheet.create({
     width: undefined,
   },
   profileImage: {
+    borderWidth: 5,
+    borderColor: '#ffff',
+    backgroundColor: '#ffff',
     marginTop: height * 0.1,
     width: width * 0.5,
     height: width * 0.5,
     borderRadius: width * 0.3,
     overflow: "hidden",
     zIndex: 1,
+    bottom: 20,
   },
   box1: {
     marginTop: -70,

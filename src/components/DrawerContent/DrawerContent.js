@@ -77,6 +77,7 @@ function DrawerContent(props) {
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
+  const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
     const userDocRef = firebase
@@ -90,6 +91,7 @@ function DrawerContent(props) {
         setFirstname(snapshot.data().firstname);
         setLastname(snapshot.data().lastname);
         setEmail(snapshot.data().email);
+        setProfileImage(snapshot.data().profileImage);
       } else {
         console.log('User does not exist');
       }
@@ -109,12 +111,19 @@ function DrawerContent(props) {
           <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
             <View style={styles.userInfoSection}>
               <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                <Avatar.Image
+              {profileImage ?
+                (<Avatar.Image
+                  source={{uri: profileImage}}
+                  size={60}
+                  backgroundColor='transparent'
+                  style={{ marginTop: 5 }}
+                />) :
+                (<Avatar.Image
                   source={KhenImage}
                   size={60}
                   backgroundColor='transparent'
                   style={{ marginTop: 5 }}
-                />
+                />)}
                 <View style={{ marginLeft: 10, flexDirection: 'column' }}>
                   <Title style={styles.title}>{firstname} {lastname}</Title>
                   <Text style={styles.caption} numberOfLines={1}>

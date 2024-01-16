@@ -12,6 +12,7 @@ import { PaperProvider } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { firebase } from '../../../firebase';
 
+
 export default function HomeScreen({ navigation }) {
 
   const [firstname, setFirstname] = useState('');
@@ -24,6 +25,8 @@ export default function HomeScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [greet, setGreet] = useState('');
 
+  const [profileImage, setProfileImage] = useState(null);
+
   useEffect(() => {
     const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
   
@@ -32,6 +35,7 @@ export default function HomeScreen({ navigation }) {
       if (snapshot.exists) {
         setFirstname(snapshot.data().firstname);
         setLastname(snapshot.data().lastname);
+        setProfileImage(snapshot.data().profileImage);
       } else {
         console.log('User does not exist');
       }
@@ -87,11 +91,11 @@ export default function HomeScreen({ navigation }) {
     <PaperProvider>
       <View style={styles.container}>
         <View style={styles.profileImage}>
-          <Image
-            source={require("../../../assets/pfp.png")}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          {profileImage ? (
+              <Image source={{ uri: profileImage }} style={styles.image} resizeMode="cover" />
+            ) : (
+              <Image source={require("../../../assets/pfp.png")} style={styles.image} resizeMode="cover" />
+            )}
         </View>
         <View style={styles.box1}>
           <View style={{alignSelf:'center', marginTop: 80}}>
@@ -165,12 +169,16 @@ const styles = StyleSheet.create({
     width: undefined,
   },
   profileImage: {
+    borderWidth: 5,
+    borderColor: '#233DFD',
+    backgroundColor: '#233DFD',
     marginTop: height * 0.05,
     width: width * 0.5,
     height: width * 0.5,
     borderRadius: width * 0.3,
     overflow: "hidden",
     zIndex: 1,
+    bottom: 20,
   },
   boxUsername: {
     backgroundColor: "#233DFD",
