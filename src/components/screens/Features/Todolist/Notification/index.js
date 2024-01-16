@@ -26,69 +26,86 @@ const ModalNotification = ({
     showHours: false,
   });
 
-
-
   const [notificationSound, setNotificationSound] = useState(null);
 
-
   const playNotificationSound = async () => {
-    const soundObject = new Audio.Sound();
-    setNotificationSound(soundObject);
-
-    try {
-      await soundObject.loadAsync(require('../../../../../../assets/TimerAlarm.mp3'));
-      await soundObject.playAsync();
-    } catch (error) {
-      console.error('Error loading sound', error);
+    if (notificationSound) {
+      try {
+        await notificationSound.replayAsync();
+      } catch (error) {
+        console.error('Error replaying sound', error);
+      }
+    } else {
+      const soundObject = new Audio.Sound();
+      setNotificationSound(soundObject);
+  
+      try {
+        await soundObject.loadAsync(require('../../../../../../assets/TimerAlarm1.mp3'));
+        await soundObject.playAsync();
+      } catch (error) {
+        console.error('Error loading or playing sound', error);
+        
+      }
     }
   };
-
+  
   const stopNotificationSound = async () => {
     if (notificationSound) {
       try {
         await notificationSound.stopAsync();
-        setNotificationSound(null); // Set the notificationSound state to null
+        setNotificationSound(null);
+        Alert.alert('Audio Canceled', 'Notification sound has been canceled.');
       } catch (error) {
         console.error('Error stopping sound', error);
       }
     }
+  };
+  const unloadNotificationSound = async () => {
+    if (notificationSound) {
+      try {
+        await notificationSound.unloadAsync();
+      } catch (error) {
+        console.error('Error unloading sound', error);
+      }
+    }
+  };
 
+  const schedulePushNotification = async () => {
+    const scheduledDate = date;
+  
+    const notificationContent = {
+      title: `Notification: ${note.title.substr(0, 40)}`,
+      body: note.note.substr(0, 50),
+      actions: [{ identifier: 'SILENCE_ACTION', title: 'Silence' }],
+    };
+  
+    const id = await Notifications.scheduleNotificationAsync({
+      content: notificationContent,
+      trigger: {
+        date: scheduledDate,
+      },
+    });
+  
+    setNote({ ...note, notificationId: id });
+  
+    // Listen for the scheduled notification
+    Notifications.addNotificationReceivedListener(async (notification) => {
+      if (notification.request.content.title === notificationContent.title) {
+        playNotificationSound();
+      }
+    });
+  
+    // Listen for notification response
     Notifications.addNotificationResponseReceivedListener(response => {
       const { actionIdentifier } = response;
       if (actionIdentifier === 'SILENCE_ACTION') {
-        // Handle the custom action (e.g., silencing the sound)
-        Notifications.dismissAllNotificationsAsync(response.notification.request.identifier);
+        stopNotificationSound();
+        unloadNotificationSound(); // Unload the sound when silenced
+        Alert.alert('Notification Pressed', 'Notification sound has been stopped.');
       }
     });
   };
-
-
-  const schedulePushNotification = async () => {
-  const scheduledDate = date;
-
-  const id = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: `Notification: ${note.title.substr(0, 40)}`,
-      body: note.note.substr(0, 50),
-    },
-    trigger: {
-      date: scheduledDate,
-    },
-  });
-
-  setNote({ ...note, notificationId: id });
-
-  // Listen for the scheduled notification
-  Notifications.addNotificationReceivedListener(async (notification) => {
-    if (notification.request.content.title === `Notification: ${note.title.substr(0, 40)}`) {
-      playNotificationSound();
-    }
-  });
-};
-
   
-  
-
   const onChange = (event, selectedDate) => {
     setShowPicker({ showDate: false, showHours: false });
     const currentDate = selectedDate || date;
@@ -110,6 +127,12 @@ const ModalNotification = ({
     }
   };
 
+  useEffect(() => {
+    return () => {
+      unloadNotificationSound(); // Unload the sound when the component is unmounted
+    };
+  }, []);
+
   return (
     <Modal
       animationType="fade"
@@ -119,7 +142,7 @@ const ModalNotification = ({
         setModalVisible(!modalVisible);
       }}
     >
-      <View >
+      <View>
         <View
           style={[
             Style.modalView,
@@ -165,7 +188,10 @@ const ModalNotification = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={[Style.button, Style.buttonCancel]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                stopNotificationSound();
+                setModalVisible(!modalVisible);
+              }}
             >
               <Text style={Style.textStyle}>CANCEL</Text>
             </TouchableOpacity>
