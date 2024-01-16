@@ -78,9 +78,9 @@ export default function HomeScreen({ navigation }) {
 
   const findGreet = () => {
     const hrs = new Date().getHours();
-    if (hrs === 0 || hrs < 12) return setGreet('Morning');
-    if (hrs === 1 || hrs < 17) return setGreet('Afternoon');
-    setGreet('Evening');
+    if (hrs === 0 || hrs < 12) return setGreet('Morning! 🌄');
+    if (hrs === 1 || hrs < 17) return setGreet('Afternoon! 🌞');
+    setGreet('Evening! 🌇');
   };
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function HomeScreen({ navigation }) {
               fontWeight:'bold', 
               textAlign:'center',
               color:'black',
-              }}>{`Good ${greet}!`}</Text>
+              }}>{`Good ${greet}`}</Text>
           </View>
           <TouchableOpacity
             onPress={() => navigation.navigate("Profile")}
@@ -184,9 +184,10 @@ const styles = StyleSheet.create({
   },
   boxUsername: {
     backgroundColor: "#233DFD",
-    borderRadius: 30,
-    width: 250,
-    height: 60,
+    borderRadius: 50,
+    width: 'auto',
+    height: 'auto',
+    padding: 15,
     marginTop: 10,
     alignSelf: "center",
   },
@@ -198,10 +199,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   usernameSettings: {
-    marginTop: 15,
-    alignSelf: "center",
-    textAlign: "center",
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
     zIndex: 1,
     color: "white",
