@@ -3,6 +3,8 @@ import { StyleSheet, View, Image, Dimensions, Text, TouchableOpacity, TextInput,
 import { PaperProvider } from "react-native-paper";
 import { firebase } from '../../../firebase';
 import * as ImagePicker from 'expo-image-picker';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 export default function EditProfileScreen({ navigation }) {
 
@@ -126,15 +128,17 @@ export default function EditProfileScreen({ navigation }) {
   return (
     <PaperProvider>
       <View style={styles.container}>
-        <TouchableOpacity onPress={uploadImage} style={{zIndex: 1}}>
           <View style={styles.profileImage}>
             {profileImage ? (
               <Image source={{ uri: profileImage }} style={styles.image} resizeMode="cover" />
             ) : (
               <Image source={require("././../../../assets/pfp.png")} style={styles.image} resizeMode="cover" />
             )}
+            <TouchableOpacity onPress={uploadImage} style={styles.changeImageButton}>
+              <MaterialCommunityIcons name="pencil" size={20} color="white" />
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        
         <View style={styles.box1}>
           <View style={styles.inputContainer}>
             <TextInput
@@ -182,6 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#050A30",
   },
   image: {
+    opacity: 0.5,
     flex: 1,
     height: undefined,
     width: undefined,
@@ -197,6 +202,16 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     zIndex: 1,
     bottom: 20,
+  },
+  changeImageButton: {
+    backgroundColor: "#233DFD",
+    position: 'absolute',
+    top: 140,
+    right: 30,
+    padding: 10,
+    borderRadius: 50,
+    marginTop: 10,
+    alignSelf: "center",
   },
   box1: {
     marginTop: -70,
