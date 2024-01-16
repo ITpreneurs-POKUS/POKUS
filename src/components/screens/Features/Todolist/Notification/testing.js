@@ -26,10 +26,7 @@ const ModalNotification = ({
     showHours: false,
   });
 
-
-
   const [notificationSound, setNotificationSound] = useState(null);
-
 
   const playNotificationSound = async () => {
     const soundObject = new Audio.Sound();
@@ -47,47 +44,36 @@ const ModalNotification = ({
     if (notificationSound) {
       try {
         await notificationSound.stopAsync();
-        setNotificationSound(null); // Set the notificationSound state to null
+        await notificationSound.unloadAsync();
+        setNotificationSound(null);
       } catch (error) {
         console.error('Error stopping sound', error);
       }
     }
+  };
 
-    Notifications.addNotificationResponseReceivedListener(response => {
-      const { actionIdentifier } = response;
-      if (actionIdentifier === 'SILENCE_ACTION') {
-        // Handle the custom action (e.g., silencing the sound)
-        Notifications.dismissAllNotificationsAsync(response.notification.request.identifier);
+  const schedulePushNotification = async () => {
+    const scheduledDate = date;
+
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: `Notification: ${note.title.substr(0, 40)}`,
+        body: note.note.substr(0, 50),
+      },
+      trigger: {
+        date: scheduledDate,
+      },
+    });
+
+    setNote({ ...note, notificationId: id });
+
+    // Listen for the scheduled notification
+    Notifications.addNotificationReceivedListener(async (notification) => {
+      if (notification.request.content.title === `Notification: ${note.title.substr(0, 40)}`) {
+        playNotificationSound();
       }
     });
   };
-
-
-  const schedulePushNotification = async () => {
-  const scheduledDate = date;
-
-  const id = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: `Notification: ${note.title.substr(0, 40)}`,
-      body: note.note.substr(0, 50),
-    },
-    trigger: {
-      date: scheduledDate,
-    },
-  });
-
-  setNote({ ...note, notificationId: id });
-
-  // Listen for the scheduled notification
-  Notifications.addNotificationReceivedListener(async (notification) => {
-    if (notification.request.content.title === `Notification: ${note.title.substr(0, 40)}`) {
-      playNotificationSound();
-    }
-  });
-};
-
-  
-  
 
   const onChange = (event, selectedDate) => {
     setShowPicker({ showDate: false, showHours: false });
@@ -110,6 +96,26 @@ const ModalNotification = ({
     }
   };
 
+  const showAlert = () => {
+    Alert.alert(
+      "Stop Notification Sound",
+      "Do you want to stop the notification sound?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            stopNotificationSound();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <Modal
       animationType="fade"
@@ -119,7 +125,7 @@ const ModalNotification = ({
         setModalVisible(!modalVisible);
       }}
     >
-      <View >
+      <View>
         <View
           style={[
             Style.modalView,
@@ -165,15 +171,11 @@ const ModalNotification = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={[Style.button, Style.buttonCancel]}
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={() => {
+                showAlert(); // Show the alert to stop the sound
+                setModalVisible(!modalVisible);
+              }}
             >
               <Text style={Style.textStyle}>CANCEL</Text>
             </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
-
-export default ModalNotification;
+          </

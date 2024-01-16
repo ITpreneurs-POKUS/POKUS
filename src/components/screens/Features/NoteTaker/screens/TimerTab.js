@@ -66,7 +66,7 @@ export default class TimerTab extends Component {
       const { actionIdentifier } = response;
       if (actionIdentifier === 'SILENCE_ACTION') {
         // Handle the custom action (e.g., silencing the sound)
-        Notifications.dismissNotificationAsync(response.notification.request.identifier);
+        Notifications.dismissAllNotificationsAsync(response.notification.request.identifier);
       }
     });
   };
