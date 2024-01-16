@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     width: undefined,
   },
   profileImage: {
-    borderWidth: 5,
+    borderWidth: 15,
     borderColor: '#ffff',
     backgroundColor: '#ffff',
     marginTop: height * 0.1,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   changeImageButton: {
     backgroundColor: "#233DFD",
     position: 'absolute',
-    top: 140,
+    top: 130,
     right: 30,
     padding: 10,
     borderRadius: 50,

@@ -113,43 +113,45 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.usernameSettings}>{`${firstname} ${lastname}`}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.box2}>
-          <Text style={styles.quoteofthedayTitle}>Quote of the Day</Text>
-          <FontAwesome5
-            name="quote-left"
-            style={styles.quoteLeft}
-            color="white"
-          ></FontAwesome5>
-          <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <Text style={styles.thequoteReal}>{Quote}</Text>
-            <Text
-              style={[
-                styles.quoteAuthor,
-                { textAlign: "center", marginTop: 3 },
-              ]}
-            >
-               {Title}
-            </Text>
-            <Text
-              style={[
-                styles.quoteAuthor,
-                { textAlign: "right", marginTop: 3, marginTop: 20, marginRight: 20 },
-              ]}
-            >
-              — {Author}
-            </Text>
-          
-            <TouchableOpacity
-              onPress={randomQuote}
-              style={styles.newquoteButton}
-              disabled={isLoading}
-            >
-              <Text style={styles.newquotebuttonText}>
-                {isLoading ? "Loading..." : "New Quote"}
+        <ScrollView>
+          <View style={styles.box2}>
+            <Text style={styles.quoteofthedayTitle}>Quote of the Day</Text>
+            <FontAwesome5
+              name="quote-left"
+              style={styles.quoteLeft}
+              color="white"
+            ></FontAwesome5>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+              <Text style={styles.thequoteReal}>{Quote}</Text>
+              <Text
+                style={[
+                  styles.quoteAuthor,
+                  { textAlign: "center", marginTop: 3 },
+                ]}
+              >
+                {Title}
               </Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
+              <Text
+                style={[
+                  styles.quoteAuthor,
+                  { textAlign: "right", marginTop: 3, marginTop: 20, marginRight: 20 },
+                ]}
+              >
+                — {Author}
+              </Text>
+            
+              <TouchableOpacity
+                onPress={randomQuote}
+                style={styles.newquoteButton}
+                disabled={isLoading}
+              >
+                <Text style={styles.newquotebuttonText}>
+                  {isLoading ? "Loading..." : "New Quote"}
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </ScrollView>
       </View>
     </PaperProvider>
   );
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     width: undefined,
   },
   profileImage: {
-    borderWidth: 5,
+    borderWidth: 15,
     borderColor: '#233DFD',
     backgroundColor: '#233DFD',
     marginTop: height * 0.05,
