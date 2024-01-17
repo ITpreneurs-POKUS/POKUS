@@ -1,19 +1,20 @@
-import React, { Component } from "react";
-import { Alert, StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Platform } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import React, { Component } from 'react';
+import { Alert, StyleSheet, View, Text, Dimensions, StatusBar, TouchableOpacity, Platform } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import * as Notifications from 'expo-notifications';
 import { Audio } from 'expo-av';
+import { useIsFocused } from '@react-navigation/native';  // Import the useIsFocused hook
 
-const formatNumber = number => `0${number}`.slice(-2);
+const formatNumber = (number) => `0${number}`.slice(-2);
 
-const getRemaining = time => {
+const getRemaining = (time) => {
   const hours = Math.floor(time / 3600);
   const minutes = Math.floor((time % 3600) / 60);
   const seconds = time % 60;
   return { hours: formatNumber(hours), minutes: formatNumber(minutes), seconds: formatNumber(seconds) };
 };
 
-const createArray = length => {
+const createArray = (length) => {
   const arr = [];
   let i = 0;
   while (i < length) {
@@ -21,33 +22,51 @@ const createArray = length => {
     i += 1;
   }
   return arr;
-}
+};
 
 const AVAILABLE_HOURS = createArray(24);
 const AVAILABLE_MINUTES = createArray(60);
 const AVAILABLE_SECONDS = createArray(60);
 
-export default class TimerTab extends Component {
+class TimerTab extends Component {
   state = {
     remainingSeconds: 5,
     isRunning: false,
-    selectedHours: "0",
-    selectedMinutes: "0",
-    selectedSeconds: "0",
+    selectedHours: '0',
+    selectedMinutes: '0',
+    selectedSeconds: '0',
     notificationSound: null,
   };
   interval = null;
-
+  
   componentDidMount() {
     // Set up notification handler when the component mounts
     this.setupNotifications();
+    // Check if the screen is focused before starting the timer
+    if (this.props.isFocused) {
+      this.start();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    // Check if the screen focus has changed
+    if (prevProps.isFocused !== this.props.isFocused) {
+      if (this.props.isFocused) {
+        // Start the timer when the screen is focused
+        this.start();
+      } else {
+        // Stop the timer when the screen is unfocused
+        this.stop();
+      }
+    }
   }
 
   componentWillUnmount() {
     if (this.interval) {
       clearInterval(this.interval);
     }
-    
+
+    console.log('unmount')
     // Stop the notification sound
     this.stopNotificationSound();
   }
@@ -60,9 +79,9 @@ export default class TimerTab extends Component {
         shouldSetBadge: false,
       }),
     });
-  
+
     // Add a listener for notification actions
-    Notifications.addNotificationResponseReceivedListener(response => {
+    Notifications.addNotificationResponseReceivedListener((response) => {
       const { actionIdentifier } = response;
       if (actionIdentifier === 'SILENCE_ACTION') {
         // Handle the custom action (e.g., silencing the sound)
@@ -70,14 +89,13 @@ export default class TimerTab extends Component {
       }
     });
   };
-  
 
   playNotificationSound = async () => {
     console.log('Playing notification sound');
     // Initialize the soundObject and set it in the state
     const soundObject = new Audio.Sound();
     this.setState({ notificationSound: soundObject });
-  
+
     try {
       await soundObject.loadAsync(require('../../../../../../assets/TimerAlarm.mp3'));
       await soundObject.playAsync();
@@ -90,7 +108,7 @@ export default class TimerTab extends Component {
     const notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Timer Finished',
-        body: "Your timer has finished!"
+        body: 'Your timer has finished!',
       },
       trigger: null,
     });
@@ -106,13 +124,13 @@ export default class TimerTab extends Component {
       parseInt(this.state.selectedHours, 10) * 3600 +
       parseInt(this.state.selectedMinutes, 10) * 60 +
       parseInt(this.state.selectedSeconds, 10);
-  
+
     if (selectedTimeInSeconds <= 0) {
       // Display an alert or take any other appropriate action
-      Alert.alert("Invalid Time", "Please select a time.");
+      Alert.alert('Invalid Time', 'Please select a time.');
       return;
     }
-  
+
     // Continue with starting the timer
     this.setupNotifications();
     this.setState({
@@ -120,27 +138,27 @@ export default class TimerTab extends Component {
       isRunning: true,
       alertShown: false, // New state to track if the alert has been shown
     });
-  
+
     this.interval = setInterval(() => {
       this.setState((state) => ({
         remainingSeconds: state.remainingSeconds - 1,
       }));
-  
+
       if (this.state.remainingSeconds === 0 && !this.state.alertShown) {
         // Set alertShown to true to prevent showing the alert multiple times
         this.setState({ alertShown: true });
-  
+
         // Schedule a notification when the timer reaches 0
         this.scheduleNotification();
-  
+
         // Display the alert with a delay of 2 seconds
         setTimeout(() => {
           Alert.alert(
-            "Timer Alert",
-            "Your timer has reached zero!",
+            'Timer Alert',
+            'Your timer has reached zero!',
             [
               {
-                text: "OK",
+                text: 'OK',
                 onPress: () => {
                   // Stop the notification sound when the alert is dismissed
                   this.stopNotificationSound();
@@ -162,21 +180,20 @@ export default class TimerTab extends Component {
       }
     }, 1000);
   };
-  
 
-// Add this function to stop the notification sound
-stopNotificationSound = async () => {
-  console.log('Stopping notification sound');
-  const { notificationSound } = this.state;
-  
-  if (notificationSound) {
-    try {
-      await notificationSound.stopAsync();
-    } catch (error) {
-      console.error('Error stopping sound', error);
+  // Add this function to stop the notification sound
+  stopNotificationSound = async () => {
+    console.log('Stopping notification sound');
+    const { notificationSound } = this.state;
+
+    if (notificationSound) {
+      try {
+        await notificationSound.stopAsync();
+      } catch (error) {
+        console.error('Error stopping sound', error);
+      }
     }
-  }
-};
+  };
 
   stop = () => {
     clearInterval(this.interval);
@@ -184,9 +201,9 @@ stopNotificationSound = async () => {
     this.setState({
       remainingSeconds: 5,
       isRunning: false,
-      selectedHours: "0",
-      selectedMinutes: "0",
-      selectedSeconds: "0",
+      selectedHours: '0',
+      selectedMinutes: '0',
+      selectedSeconds: '0',
     });
   };
 
@@ -265,61 +282,63 @@ stopNotificationSound = async () => {
   }
 }
 
-const screen = Dimensions.get("window");
+const screen = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#050A30",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: '#050A30',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     borderWidth: 10,
-    borderColor: "#05FF00",
+    borderColor: '#05FF00',
     width: screen.width / 2,
     height: screen.width / 2,
     borderRadius: screen.width / 2,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 200
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 200,
   },
   buttonStop: {
-    borderColor: "#FF0000"
+    borderColor: '#FF0000',
   },
   buttonText: {
     fontSize: 45,
-    color: "#05FF00"
+    color: '#05FF00',
   },
   buttonTextStop: {
-    color: "#FF0000"
+    color: '#FF0000',
   },
   timerText: {
-    color: "#fff",
-    fontSize: 90
+    color: '#fff',
+    fontSize: 90,
   },
   picker: {
     flex: 1,
     maxWidth: 100,
     ...Platform.select({
       android: {
-        color: "#fff",
-        backgroundColor: "rgba(92, 92, 92, 0.206)",
-      }
-    })
+        color: '#fff',
+        backgroundColor: 'rgba(92, 92, 92, 0.206)',
+      },
+    }),
   },
   pickerItem: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
     ...Platform.select({
       android: {
         marginLeft: 10,
         marginRight: 10,
-      }
-    })
+      },
+    }),
   },
   pickerContainer: {
-    flexDirection: "row",
-    alignItems: "center"
-  }
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
+
+export default TimerTab;

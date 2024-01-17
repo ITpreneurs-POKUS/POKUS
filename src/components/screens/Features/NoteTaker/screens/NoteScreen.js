@@ -112,12 +112,6 @@ const NoteScreen = ({ navigation }) => {
       </TouchableWithoutFeedback>
 
       <RoundIconBtn
-        onPress={() => navigation.navigate('TimerTab')}
-        iconName='clock'
-        style={styles.timerBtn}
-      />
-
-      <RoundIconBtn
         onPress={() => setModalVisible(true)}
         iconName='plus'
         style={styles.addBtn}
@@ -153,13 +147,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: -1,
-  },
-  timerBtn: {
-    position: 'absolute',
-    right: 15,
-    bottom: 130,
-    zIndex: 1,
-    backgroundColor: colors.POKUS_SECONDARY,
   },
   addBtn: {
     position: 'absolute',

@@ -24,19 +24,19 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import EditProfileScreen from "../screens/EditProfileScreen";
-import NoteTakerScreen from "../screens/Features/NoteTaker/NoteTakerScreen";
 import React from "react";
 import { firebase } from '../../../firebase';
-import { LogBox } from "react-native";
+// import { LogBox } from "react-native";
 import SendEmailScreen from "../screens/SendEmailScreen";
+import NoteProvider from "../screens/Features/NoteTaker/contexts/NoteProvider";
+import NoteScreen from "../screens/Features/NoteTaker/screens/NoteScreen";
+import NoteDetail from "../screens/Features/NoteTaker/components/NoteDetail";
+import TimerTab from "../screens/Features/NoteTaker/screens/TimerTab";
 
-
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 
 function AuthStack({ navigation }) {
-  LogBox.ignoreAllLogs();
+  // LogBox.ignoreAllLogs();
   const AuthStack = createNativeStackNavigator();
 
   const [initializing, setInitializing] = React.useState(true);
@@ -100,67 +100,97 @@ function HomeStack() {
   const navigation = useNavigation();
 
   return (
-    <HomeStack.Navigator
-      screenOptions={{
-        statusBarColor: "#050A30",
-        headerStyle: {
-          backgroundColor: "#050A30",
-        },
-        headerTintColor: "#fff",
-        headerTitleAlign: "center",
+    <NoteProvider>
+      <HomeStack.Navigator
+        initialRouteName="HomeDrawer"
+        screenOptions={{
+          statusBarColor: "#050A30",
+          headerStyle: {
+            backgroundColor: "#050A30",
+          },
+          headerTintColor: "#fff",
+          headerTitleAlign: "center",
 
-        headerLeft: () => {
-          return (
-            <Icon
-              name="menu"
-              onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              size={30}
-              color="#fff"
-            />
-          );
-        },
-      }}
-    >
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Todolist" component={Todolist} />
-      <HomeStack.Screen
-        name="AddNotes"
-        component={AddNotes}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen name="NoteTaker" component={NoteTakerScreen} />
-      <HomeStack.Screen name="ChatBot" component={ChatBot} />
-      <HomeStack.Screen name="FlashCard" component={BottomTabs} />
-      <HomeStack.Screen name="DeckList" component={DeckList} />
-      <HomeStack.Screen
-        name="DeckDetail"
-        component={DeckDetail}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="AddCard"
-        component={AddCard}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen
-        name="Quiz"
-        component={Quiz}
-        options={{ headerShown: false }}
-      />
-      <HomeStack.Screen name="Profile" component={EditProfileScreen} />
-      <HomeStack.Screen name="Email" component={SendEmailScreen} />
-      <HomeStack.Screen
-        options={{ headerShown: false }}
-        name="BackToLanding"
-        component={AuthStack}
-      />
-    </HomeStack.Navigator>
+          headerLeft: () => {
+            return (
+              <Icon
+                name="menu"
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+                size={30}
+                color="#fff"
+              />
+            );
+          },
+        }}
+      >
+        <HomeStack.Screen name="Home" component={HomeScreen} />
+        <HomeStack.Screen name="Todolist" component={Todolist} />
+        <HomeStack.Screen
+          name="AddNotes"
+          component={AddNotes}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen name="NoteTaker" component={NoteScreen}/>
+        <HomeStack.Screen
+          name="NoteDetail"
+          component={NoteDetail}
+          options={{
+            headerLeft: () => (
+              <Icon
+                name="arrow-left"
+                onPress={() => navigation.navigate('NoteTaker')}
+                size={30}
+                color="#fff"
+                style={{ marginLeft: 10 }}
+              />
+            ),
+          }}
+        />
+
+        <HomeStack.Screen name="Timer" component={TimerTab} />
+        <HomeStack.Screen name="ChatBot" component={ChatBot} />
+
+        <HomeStack.Screen name="FlashCard" component={BottomTabs} />
+        <HomeStack.Screen name="DeckList" component={DeckList} />
+        <HomeStack.Screen
+          name="DeckDetail"
+          component={DeckDetail}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name="AddCard"
+          component={AddCard}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen
+          name="Quiz"
+          component={Quiz}
+          options={{ headerShown: false }}
+        />
+        <HomeStack.Screen name="Email" component={SendEmailScreen} />
+        <HomeStack.Screen
+          name="Profile"
+          component={EditProfileScreen}
+          options={{
+            headerLeft: () => (
+              <Icon
+                name="arrow-left"
+                onPress={() => navigation.goBack()}
+                size={30}
+                color="#fff"
+                style={{ marginLeft: 10 }}
+              />
+            ),
+          }}
+        />
+      </HomeStack.Navigator>
+    </NoteProvider>
   );
 }
 
 
-
 function BottomTabs() {
+  const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       initialRouteName="DeckList"

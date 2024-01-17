@@ -3,25 +3,25 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { Avatar, Title } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { firebase } from '../../../firebase';
 
 const KhenImage = require('../../../assets/pfp.png');
 
-const DrawerList = [
+const DrawerList = [  
   { icon: 'account-outline', label: 'Home', navigateTo: 'Home' },
   { icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist' },
   { icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker' },
   { icon: 'checkbox-multiple-blank-outline', label: 'FlashCard', navigateTo: 'FlashCard' },
-  { icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot' },
+  { icon: 'timer-sand', label: 'Timer', navigateTo: 'Timer' },
 ];
 
 const DrawerLayout = ({ icon, label, navigateTo }) => {
   const navigation = useNavigation();
   return (
     <DrawerItem
-      icon={({ size }) => <Icon name={icon} color={'white'} size={size} />}
+      icon={() => <Icon name={icon} color={'white'} size={40} />}
       label={label}
       onPress={() => {
         navigation.navigate(navigateTo);
@@ -47,6 +47,10 @@ const DrawerItems = props => {
 
 function DrawerContent(props) {
   const navigation = useNavigation();
+
+  const goToChatBot = () => {
+    navigation.navigate("ChatBot")
+  }
 
   const handleSendEmail = () => {
     navigation.navigate("Email");
@@ -136,12 +140,23 @@ function DrawerContent(props) {
           <View style={styles.drawerSection}>
             <DrawerItems />
           </View>
+
+          <View style={[styles.drawerSection, {marginTop: 50}]}>
+              <DrawerItem
+                icon={() => (
+                  <Icon name="robot-outline" color={'white'} size={40} />
+                )}
+                label="ChatBot"
+                labelStyle={{ color: 'white' }}
+                onPress={goToChatBot}
+              />
+          </View>
         </View>
       </DrawerContentScrollView>
       <View style={[styles.bottomDrawerSection, {top: 15}]}>
         <DrawerItem
-          icon={({ size }) => (
-            <Icon name="chat-alert-outline" color={'white'} size={size} />
+          icon={() => (
+            <Icon name="chat-alert-outline" color={'white'} size={40} />
           )}
           label="Send Email"
           labelStyle={{ color: 'white' }}
@@ -150,8 +165,8 @@ function DrawerContent(props) {
       </View>
       <View style={styles.bottomDrawerSection}>
         <DrawerItem
-          icon={({ size }) => (
-            <Icon name="exit-to-app" color={'white'} size={size} />
+          icon={() => (
+            <Icon name="exit-to-app" color={'white'} size={40} />
           )}
           label="Sign Out"
           labelStyle={{ color: 'white' }}
@@ -199,9 +214,8 @@ const styles = StyleSheet.create({
   },
   drawerSection: {
     marginTop: 15,
-    borderBottomWidth: 0,
     borderBottomColor: '#dedede',
-    borderBottomWidth: 1,
+    borderBottomWidth: 5,
   },
   bottomDrawerSection: {
     marginBottom: 15,

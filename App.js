@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { firebase } from './firebase';
 import { Provider } from "react-redux";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./src/components/helper/Navigator";
 import { StyleSheet } from "react-native";
@@ -29,11 +29,11 @@ const App = () => {
   return (
         <Provider store={store}>
           <PaperProvider>
-            <SafeAreaView style={styles.container}>
+            <SafeAreaProvider style={styles.container}>
               <NavigationContainer>
                 <AppNavigator />
               </NavigationContainer>
-            </SafeAreaView>
+            </SafeAreaProvider>
           </PaperProvider>
         </Provider>
   );
