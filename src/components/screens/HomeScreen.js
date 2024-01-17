@@ -11,6 +11,7 @@ import {
 import { PaperProvider } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { firebase } from '../../../firebase';
+import axios from 'axios';
 
 
 export default function HomeScreen({ navigation }) {
@@ -19,7 +20,6 @@ export default function HomeScreen({ navigation }) {
   const [lastname, setLastname] = useState('');
 
   const [Quote, setQuote] = useState("Loading...");
-  const [Title, setTitle] = useState("Loading...");
   const [Author, setAuthor] = useState("Loading...");
   
   const [isLoading, setIsLoading] = useState(false);
@@ -48,27 +48,63 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
 
-  const randomQuote = () => {
+  // const randomQuote = () => {
     
+  //   if (isLoading) {
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   fetch("https://api.adviceslip.com/advice")
+  //     .then((res) => res.json())
+  //     .then((result) => {
+  //       setQuote(result.slip.advice);
+  //       setTitle(result.anime);
+  //       setAuthor(result.character);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching quote:", error);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+
+  const randomQuote = () => {
     if (isLoading) {
       return;
     }
-
+  
+    const category = 'inspirational';
     setIsLoading(true);
-    fetch("https://animechan.xyz/api/random")
-      .then((res) => res.json())
+  
+    const apiKey = 'sEVaddHxJT7qO2s2AR8QKQ==6CtyHYmv2GTy7IEu';
+  
+    fetch(`https://api.api-ninjas.com/v1/quotes?category=${category}`, {
+      headers: {
+        'X-Api-Key': apiKey,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((result) => {
-        setQuote(result.quote);
-        setTitle(result.anime);
-        setAuthor(result.character);
+        console.log("API Response:", result);
+        setQuote(result[0].quote);
+        setAuthor(result[0].author);
       })
       .catch((error) => {
-        console.error("Error fetching quote:", error);
+        console.error("Error fetching quote:", error.message);
       })
       .finally(() => {
         setIsLoading(false);
       });
   };
+  
 
   useEffect( () => {
      randomQuote();
@@ -123,14 +159,6 @@ export default function HomeScreen({ navigation }) {
             ></FontAwesome5>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
               <Text style={styles.thequoteReal}>{Quote}</Text>
-              <Text
-                style={[
-                  styles.quoteAuthor,
-                  { textAlign: "center", marginTop: 3 },
-                ]}
-              >
-                {Title}
-              </Text>
               <Text
                 style={[
                   styles.quoteAuthor,
