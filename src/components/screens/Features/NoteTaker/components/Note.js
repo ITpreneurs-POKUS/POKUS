@@ -9,10 +9,10 @@ import {
 import colors from '../misc/colors';
 
 const Note = ({ item, onPress }) => {
-  const { title, desc } = item;
+  const { title } = item;
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <Text style={styles.title} numberOfLines={2}>
+      <Text style={styles.title} numberOfLines={5}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 25,
     color: colors.LIGHT,
   },
 });
