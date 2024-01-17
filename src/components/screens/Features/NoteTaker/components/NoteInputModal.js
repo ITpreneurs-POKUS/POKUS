@@ -32,6 +32,8 @@ const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
     if (valueFor === 'desc') setDesc(text);
   };
 
+  const charCount = desc.length;
+
   const handleSubmit = () => {
     if (!title.trim() && !desc.trim()) return onClose();
 
@@ -53,6 +55,38 @@ const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
     onClose();
   };
 
+  const ms = Date.now();
+
+  const formatDate = (ms) => {
+    const date = new Date(ms);
+    const day = date.getDate();
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    let hrs = date.getHours().toString().padStart(2, '0');
+    const min = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hrs >= 12 ? 'PM' : 'AM';
+  
+    // Convert hours to 12-hour format
+    hrs = hrs % 12;
+    hrs = hrs ? hrs : 12;
+  
+    return `${day} ${month} ${year} - ${hrs}:${min} ${ampm}`;
+  };
+
   return (
     <>
       <StatusBar hidden />
@@ -63,14 +97,15 @@ const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
               value={title}
               multiline={true}
               onChangeText={text => handleOnChangeText(text, 'title')}
-              placeholder='TITLE'
-              style={[styles.input, styles.title]}
+              placeholder='Title'
+              style={[styles.input, styles.title, {borderBottomWidth: 2}]}
             />
+            <Text style={{marginBottom: 20}}>{formatDate(ms)}   |   {`${charCount} characters`}</Text>
             <ScrollView>
               <TextInput
                 value={desc}
                 multiline={true}
-                placeholder='Body'
+                placeholder='Start typing...'
                 style={[styles.input, styles.desc]}
                 onChangeText={text => handleOnChangeText(text, 'desc')}
               />
@@ -109,14 +144,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   input: {
-    borderBottomWidth: 2,
     borderBottomColor: colors.DARK,
     fontSize: 20,
     color: colors.DARK,
   },
   title: {
     height: 'auto',
-    marginBottom: 50,
     fontWeight: 'bold',
     fontSize: 50,
   },

@@ -76,18 +76,11 @@ class TimerTab extends Component {
       handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: true,
-        shouldSetBadge: false,
+        shouldSetBadge: true,
       }),
     });
 
-    // Add a listener for notification actions
-    Notifications.addNotificationResponseReceivedListener((response) => {
-      const { actionIdentifier } = response;
-      if (actionIdentifier === 'SILENCE_ACTION') {
-        // Handle the custom action (e.g., silencing the sound)
-        Notifications.dismissAllNotificationsAsync(response.notification.request.identifier);
-      }
-    });
+    
   };
 
   playNotificationSound = async () => {
@@ -150,6 +143,7 @@ class TimerTab extends Component {
 
         // Schedule a notification when the timer reaches 0
         this.scheduleNotification();
+        
 
         // Display the alert with a delay of 2 seconds
         setTimeout(() => {

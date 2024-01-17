@@ -26,49 +26,16 @@ const ModalNotification = ({
     showHours: false,
   });
 
-  const [notificationSound, setNotificationSound] = useState(null);
-
   const playNotificationSound = async () => {
     const soundObject = new Audio.Sound();
-    setNotificationSound(soundObject);
 
     try {
-      await soundObject.loadAsync(require('../../../../../../assets/TimerAlarm.mp3'));
+      await soundObject.loadAsync(require('../../../../../../assets/TodolistAlarm.mp3'));
       await soundObject.playAsync();
     } catch (error) {
       console.error('Error loading sound', error);
     }
   };
-
-  const stopNotificationSound = async () => {
-    if (notificationSound) {
-      try {
-        await notificationSound.stopAsync();
-        setNotificationSound(null); // Set the notificationSound state to null
-      } catch (error) {
-        console.error('Error stopping sound', error);
-      }
-    }
-  };
-
-  useEffect(() => {
-    // Add a listener for notification actions during component mount
-    const notificationListener = Notifications.addNotificationResponseReceivedListener(response => {
-      const { actionIdentifier } = response;
-      if (actionIdentifier === 'SILENCE_ACTION') {
-        // Handle the custom action (e.g., silencing the sound)
-        stopNotificationSound();
-        Notifications.dismissAllNotificationsAsync(response.notification.request.identifier);
-      }
-    });
-
-    // Clean up the listener on component unmount
-    return () => {
-      if (notificationListener) {
-        notificationListener.remove();
-      }
-    };
-  }, []); // Empty dependency array means this effect runs once on mount
 
   const schedulePushNotification = async () => {
     const scheduledDate = date;
@@ -89,24 +56,10 @@ const ModalNotification = ({
     Notifications.addNotificationReceivedListener(async (notification) => {
       if (notification.request.content.title === `Notification: ${note.title.substr(0, 40)}`) {
         playNotificationSound();
-
-        Alert.alert(
-            "Timer Alert",
-            "Your timer has reached zero!",
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  // Stop the notification sound when the alert is dismissed
-                  this.stopNotificationSound();
-                  this.stop();
-                },
-              },
-            ],
-            { cancelable: false }
-          );
       }
     });
+
+    
   };
 
   const onChange = (event, selectedDate) => {

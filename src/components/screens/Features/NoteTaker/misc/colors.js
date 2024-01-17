@@ -4,6 +4,6 @@ export default {
   PRIMARY: '#dbb2ff',
   ERROR: '#ff0000',
   POKUS: '#050A30',
-  POKUS_SECONDARY: '#233DFD',
+  POKUS_SECONDARY: '#017CE9',
   SUCCESS: '#05FF00',
 };

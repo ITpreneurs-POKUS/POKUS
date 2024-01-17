@@ -6,17 +6,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotes } from '../contexts/NoteProvider';
 import NoteInputModal from './NoteInputModal';
 
-const formatDate = ms => {
+const formatDate = (ms) => {
   const date = new Date(ms);
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
-  const hrs = date.getHours();
-  const min = date.getMinutes();
-  const sec = date.getSeconds();
+  let hrs = date.getHours();
+  const min = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hrs >= 12 ? 'PM' : 'AM';
 
-  return `${day}/${month}/${year} - ${hrs}:${min}:${sec}`;
+  // Convert hours to 12-hour format
+  hrs = hrs % 12;
+  hrs = hrs ? hrs : 12;
+
+  return `${month}/${day}/${year} - ${hrs}:${min} ${ampm}`;
 };
+
 
 const NoteDetail = (props) => {
   const [note, setNote] = useState(props.route.params.note);
@@ -87,7 +92,6 @@ const NoteDetail = (props) => {
 
   return (
     <>
-      <View style={{height: 50}}></View>
       <View style={{flex: 1}}>
         <ScrollView
           contentContainerStyle={styles.container}
@@ -99,7 +103,7 @@ const NoteDetail = (props) => {
           </Text>
           <Text style={styles.title}>{note.title}</Text>
           <Text>----------------------------------------------------------------------------------------------------------------</Text>
-          <Text style={[styles.desc, {marginTop: 20}]}>   {note.desc}</Text>
+          <Text style={[styles.desc, {marginTop: 20}]}>{note.desc}</Text>
         </ScrollView>
       </View>
       <View style={styles.btnContainer}>

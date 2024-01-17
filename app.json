@@ -11,21 +11,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#050A30"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesAudio": true
+      }
     },
     "android": {
       "adaptiveIcon": {
         "useNextNotificationsApi": true,
         "foregroundImage": "./assets/PokusLogo.png",
         "backgroundColor": "#050A30",
-        "permissions": [
-          "NOTIFICATIONS",
-          "READ_EXTERNAL_STORAGE"
-        ],
+        "permissions": ["NOTIFICATIONS", "READ_EXTERNAL_STORAGE"],
         "splash": {
           "image": "./assets/SplashScreen.png",
           "resizeMode": "contain",
@@ -36,6 +34,10 @@
       "notification": {
         "androidMode": "default",
         "sound": true
+      },
+      "config": {
+        "googleServicesFile": "./google-services.json",
+        "usesAudio": true
       }
     },
     "web": {
