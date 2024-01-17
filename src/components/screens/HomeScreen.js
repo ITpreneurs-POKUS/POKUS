@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     width: undefined,
   },
   profileImage: {
-    borderWidth: 15,
+    borderWidth: 10,
     borderColor: '#233DFD',
     backgroundColor: '#233DFD',
     marginTop: height * 0.05,
