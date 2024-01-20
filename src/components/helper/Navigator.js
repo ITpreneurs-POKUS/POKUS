@@ -26,17 +26,18 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import React, { createContext, useState, useEffect } from 'react';
 import { firebase } from '../../../firebase';
-// import { LogBox } from "react-native";
+import { LogBox } from "react-native";
 import SendEmailScreen from "../screens/SendEmailScreen";
 import NoteProvider from "../screens/Features/NoteTaker/contexts/NoteProvider";
 import NoteScreen from "../screens/Features/NoteTaker/screens/NoteScreen";
 import NoteDetail from "../screens/Features/NoteTaker/components/NoteDetail";
-import TimerTab from "../screens/Features/NoteTaker/screens/TimerTab";
+import TimerTab from "../screens/Features/Timer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AuthContext = createContext();
 
 function AuthStack() {
+  LogBox.ignoreAllLogs();
   const AuthStack = createNativeStackNavigator();
 
   const [initializing, setInitializing] = useState(true);
