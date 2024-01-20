@@ -24,7 +24,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import EditProfileScreen from "../screens/EditProfileScreen";
-import React from "react";
+import React, { createContext, useState, useEffect } from 'react';
 import { firebase } from '../../../firebase';
 // import { LogBox } from "react-native";
 import SendEmailScreen from "../screens/SendEmailScreen";
@@ -32,50 +32,80 @@ import NoteProvider from "../screens/Features/NoteTaker/contexts/NoteProvider";
 import NoteScreen from "../screens/Features/NoteTaker/screens/NoteScreen";
 import NoteDetail from "../screens/Features/NoteTaker/components/NoteDetail";
 import TimerTab from "../screens/Features/NoteTaker/screens/TimerTab";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
+export const AuthContext = createContext();
 
 function AuthStack({ navigation }) {
-  // LogBox.ignoreAllLogs();
   const AuthStack = createNativeStackNavigator();
 
-  const [initializing, setInitializing] = React.useState(true);
-  const [user, setUser] = React.useState();
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+
+    // Check AsyncStorage for user credentials
+    const checkStoredCredentials = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem('user_email');
+        const savedPassword = await AsyncStorage.getItem('user_password');
+
+        if (savedEmail && savedPassword) {
+          // Use the saved email and password for login
+          await handleLogin({ email: savedEmail, password: savedPassword });
+        } else {
+          // No saved email or password, proceed with regular login
+          if (initializing) setInitializing(false);
+        }
+      } catch (error) {
+        console.error('Error checking stored credentials:', error);
+      }
+    };
+
+    checkStoredCredentials();
+
     return subscriber;
   }, []);
+
+  const handleLogin = async (values) => {
+    try {
+      const { email, password } = values;
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
 
   if (initializing) return null;
 
   return (
-    <AuthStack.Navigator
-      screenOptions={{ headerShown: false, statusBarColor: "#050A30" }}
-    >
-      {user ? (
-        // If user is logged in, show Home Screens
-        <AuthStack.Screen name="HomeDrawer" options={{ gestureEnabled: false }}>
-          {(props) => <HomeDrawer {...props} user={user} />}
-        </AuthStack.Screen>
-      ) : (
-        // If no user is logged in, show Authentication Screens
-        <>
-          <AuthStack.Screen name="Landing" component={LandingScreen} />
-          <AuthStack.Screen name="Login" component={LoginScreen} />
-          <AuthStack.Screen name="Signup" component={SignUpScreen} />
-          <AuthStack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
-        </>
-      )}
-    </AuthStack.Navigator>
+    <AuthContext.Provider value={user}>
+      <AuthStack.Navigator
+        screenOptions={{ headerShown: false, statusBarColor: "#050A30" }}
+      >
+        {user ? (
+          <AuthStack.Screen name="HomeDrawer" options={{ gestureEnabled: false }}>
+            {(props) => <HomeDrawer {...props} user={user} />}
+          </AuthStack.Screen>
+        ) : (
+          <>
+            <AuthStack.Screen name="Landing" component={LandingScreen} />
+            <AuthStack.Screen name="Login" component={LoginScreen}/>
+            <AuthStack.Screen name="Signup" component={SignUpScreen} />
+            <AuthStack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+            />
+          </>
+        )}
+      </AuthStack.Navigator>
+    </AuthContext.Provider>
   );
 }
 

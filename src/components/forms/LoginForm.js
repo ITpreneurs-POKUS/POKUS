@@ -4,6 +4,7 @@ import { TextInput, Button, IconButton, HelperText } from 'react-native-paper';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { firebase } from '../../../firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function LoginForm({navigation}) {
@@ -17,8 +18,40 @@ export default function LoginForm({navigation}) {
       };
 
 
+    const saveValueFunction = async (values) => {
+        if (values.email) {
+            await AsyncStorage.setItem('user_email', values.email);
+        }
 
-    const handleLogin = async (values, { resetForm }) => {
+        if (values.password) {
+            await AsyncStorage.setItem('user_password', values.password);
+        }
+        };
+
+    const getValueFunction = async (values) => {
+        let savedEmail, savedPassword;
+
+        try {
+            savedEmail = await AsyncStorage.getItem('user_email');
+            savedPassword = await AsyncStorage.getItem('user_password');
+
+            console.log(savedEmail);
+            console.log(savedPassword);
+        } catch (error) {
+            console.error('Error retrieving data from AsyncStorage:', error);
+        }
+
+        if (savedEmail && savedPassword) {
+            // Use the saved email and password for Firebase login
+            await handleLogin({ email: savedEmail, password: savedPassword });
+        } else {
+            // No saved email or password, proceed with regular login
+            await handleLogin(values);
+        }
+    };
+
+
+    const handleLogin = async (values) => {
     try {
         const { email, password } = values;
 
@@ -48,8 +81,9 @@ export default function LoginForm({navigation}) {
     return (
         <Formik 
             initialValues={{email: "", password: ""}}
-            onSubmit={async (values, { resetForm }) => {
-                await handleLogin(values, { resetForm });
+            onSubmit={async (values) => {
+                await saveValueFunction(values);
+                await getValueFunction(values, handleLogin);
             }}
             validationSchema={validationSchema}
         >

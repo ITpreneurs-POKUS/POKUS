@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { firebase } from '../../../firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const KhenImage = require('../../../assets/pfp.png');
 
@@ -56,7 +57,7 @@ function DrawerContent(props) {
     navigation.navigate("Email");
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     // Display an alert when the "Sign Out" button is pressed
     Alert.alert(
       'Sign Out',
@@ -68,8 +69,17 @@ function DrawerContent(props) {
         },
         {
           text: 'Sign Out',
-          onPress: () => {
-            firebase.auth().signOut()
+          onPress: async () => {
+            // Remove user credentials from AsyncStorage
+            try {
+              await AsyncStorage.removeItem('user_email');
+              await AsyncStorage.removeItem('user_password');
+            } catch (error) {
+              console.error('Error removing user credentials from AsyncStorage:', error);
+            }
+  
+            // Sign out from Firebase
+            await firebase.auth().signOut();
           },
         },
       ],

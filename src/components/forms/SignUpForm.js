@@ -4,7 +4,7 @@ import { TextInput, Button, IconButton, HelperText } from 'react-native-paper';
 import { Formik } from 'formik';
 import * as Yup from "yup";
 import { firebase } from '../../../firebase';
-import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignUpForm({navigation}) {
 
@@ -15,42 +15,40 @@ export default function SignUpForm({navigation}) {
         ToastAndroid.show(message, 3000);
     };
 
-    const handleRegistration = async ( values, {resetForm} ) => {
-        // Destructure the required fields directly from the values object
+    const handleRegistration = async (values) => {
         const { firstname, lastname, email, password } = values;
       
-        await firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            // Send email verification
-            return firebase.auth().currentUser.sendEmailVerification({
-              handleCodeInApp: true,
-              url: 'https://pokus-b9a9f.firebaseapp.com',
-            });
-          })
-          .then(() => {
-            showToast('Verification email sent');
-          }).catch((error) => {
-            showToast(error.message)
-          })
-          .then(() => {
-            // Store additional user information in Firestore
-             firebase.firestore().collection('users')
-             .doc(firebase.auth().currentUser.uid)
-             .set({
-                firstname,
-                lastname,
-                email,
-              });
-            
-            // Dismiss the keyboard
-            Keyboard.dismiss();
-
-          })
-          .catch((error) => {
-            // Handle errors
-            showToast(error.message || 'Something went wrong');
+        try {
+          // Create a new user in Firebase Authentication
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
+      
+          // Send email verification
+          await firebase.auth().currentUser.sendEmailVerification({
+            handleCodeInApp: true,
+            url: 'https://pokus-b9a9f.firebaseapp.com',
           });
-      };      
+      
+          showToast('Verification email sent');
+      
+          // Store additional user information in Firestore
+          await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+            firstname,
+            lastname,
+            email,
+          });
+      
+          // Save user credentials in AsyncStorage
+          await AsyncStorage.setItem('user_email', email);
+          await AsyncStorage.setItem('user_password', password);
+
+      
+          // Dismiss the keyboard
+          Keyboard.dismiss();
+        } catch (error) {
+          // Handle errors
+          showToast(error.message || 'Something went wrong');
+        }
+      };     
       
 
     const validationSchema = Yup.object().shape({
