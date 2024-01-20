@@ -36,7 +36,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AuthContext = createContext();
 
-function AuthStack({ navigation }) {
+function AuthStack() {
   const AuthStack = createNativeStackNavigator();
 
   const [initializing, setInitializing] = useState(true);
