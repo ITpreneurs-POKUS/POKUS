@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Alert
 } from 'react-native';
 import colors from '../misc/colors';
 import RoundIconBtn from './RoundIconBtn';
@@ -16,6 +17,7 @@ import RoundIconBtn from './RoundIconBtn';
 const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
+
   const handleModalClose = () => {
     Keyboard.dismiss();
   };
@@ -35,7 +37,10 @@ const NoteInputModal = ({ visible, onClose, onSubmit, note, isEdit }) => {
   const charCount = desc.length;
 
   const handleSubmit = () => {
-    if (!title.trim() && !desc.trim()) return onClose();
+    if (!title.trim() || !desc.trim()) {
+      Alert.alert('Input Error', 'Please enter both title and description.');
+      return onClose();
+    }
 
     if (isEdit) {
       onSubmit(title, desc, Date.now());

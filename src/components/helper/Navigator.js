@@ -9,7 +9,7 @@ import Todolist from "../screens/Features/Todolist/pages/home/index";
 import AddNotes from "../screens/Features/Todolist/pages/AddNotes/index";
 
 // FLASHCARDS
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DeckList from "../screens/Features/FlashCards/src/components/DeckList";
 import AddDeck from "../screens/Features/FlashCards/src/components/AddDeck";
@@ -219,23 +219,24 @@ function HomeStack() {
   );
 }
 
+import { useTheme } from 'react-native-paper';
 
 function BottomTabs() {
-  const Tab = createBottomTabNavigator();
+  const Tab = createMaterialBottomTabNavigator();
+
+  const theme = useTheme();
+    theme.colors.secondaryContainer = "transperent"
+    
   return (
     <Tab.Navigator
       initialRouteName="DeckList"
-      screenOptions={({ route }) => ({
-        activeTintColor: "tomato",
-        inactiveTintColor: "grey",
-        labelStyle: { paddingBottom: 10, fontSize: 10 },
-      })}
+      activeColor="white"
+      barStyle={{ backgroundColor: '#050A30' }}
     >
       <Tab.Screen
         name="Deck"
         component={DeckList}
         options={{
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon name="format-list-bulleted" size={30} color={color} />
           ),
@@ -245,7 +246,6 @@ function BottomTabs() {
         name="AddDeck"
         component={AddDeck}
         options={{
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Icon name="playlist-plus" size={30} color={color} />
           ),
