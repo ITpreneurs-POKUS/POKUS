@@ -8,17 +8,32 @@ import 'firebase/compat/storage';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDKb6DuEOaKvAkxoHxYiJ3j4R4ScEcO5p0",
-  authDomain: "pokus-b9a9f.firebaseapp.com",
-  projectId: "pokus-b9a9f",
-  storageBucket: "pokus-b9a9f.appspot.com",
-  messagingSenderId: "243908892146",
-  appId: "1:243908892146:web:c58853bef34e804773476b"
+  apiKey: "AIzaSyDm_D19dgMRr4n_fX61REdMKJBuL0RC8Zc",
+  authDomain: "pokus-70a48.firebaseapp.com",
+  projectId: "pokus-70a48",
+  storageBucket: "pokus-70a48.appspot.com",
+  messagingSenderId: "785357521322",
+  appId: "1:785357521322:web:0be55167edfc76c161abd3",
+  measurementId: "G-420SF6XZEZ"
 };
-
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export { firebase };
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.firestore();
+const settings = { timestampsInSnapshots: true, ignoreUndefinedProperties: true };
+db.settings(settings);
+
+// Enable experimentalForceLongPolling for Firestore
+const firestoreConfig = {
+  experimentalForceLongPolling: true,
+};
+const firestore = firebase.firestore(firebase.app());
+firestore.settings(firestoreConfig);
+
+export { firebase, db };

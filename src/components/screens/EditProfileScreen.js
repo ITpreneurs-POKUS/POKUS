@@ -11,7 +11,7 @@ export default function EditProfileScreen({ navigation }) {
   const showToast = (message = "Something wen't wrong") => {
     ToastAndroid.show(message, 3000);
   };
-  
+
   const [profileImage, setProfileImage] = useState(null);
 
   const [firstname, setFirstname] = useState('');
@@ -20,7 +20,7 @@ export default function EditProfileScreen({ navigation }) {
   const [initialUserData, setInitialUserData] = useState({});
 
   useEffect(() => {
-    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+    const userDocRef = firebase.firestore().collection('user').doc(firebase.auth().currentUser.uid).collection('userData').doc(firebase.auth().currentUser.uid);
 
     userDocRef.get()
       .then((snapshot) => {
@@ -43,7 +43,7 @@ export default function EditProfileScreen({ navigation }) {
   const uploadImage = async () => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      
+
       if (status !== 'granted') {
         console.error('Permission to access media library denied');
         showToast("Permission to access media library denied");
@@ -69,14 +69,14 @@ export default function EditProfileScreen({ navigation }) {
   };
 
   const updateUserProfile = async () => {
-    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+    const userDocRef = firebase.firestore().collection('user').doc(firebase.auth().currentUser.uid).collection('userData').doc(firebase.auth().currentUser.uid);
 
     // Check if any of the required fields (firstname, lastname) is empty
     if (!firstname || !lastname) {
       showToast("Please provide all required information");
       return;
-      }
-  
+    }
+
     userDocRef
       .set({
         firstname: firstname,
@@ -91,78 +91,78 @@ export default function EditProfileScreen({ navigation }) {
         console.error('Error updating user data: ', error);
         showToast(error.message || "Failed to update user data");
       });
-    
-      try {
-        if (profileImage) {
-          const response = await fetch(profileImage);
-          const blob = await response.blob();
-    
-          const storage = firebase.storage();
-          const storageRef = storage.ref();
-          const fileName = `profile_images/${firebase.auth().currentUser.uid}/${Date.now()}.jpg`;
-    
-          const uploadTask = storageRef.child(fileName).put(blob);
-    
-          uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log(`Upload is ${progress}% done`);
-            },
-            (error) => {
-              console.error('Error uploading image:', error);
-            },
-            () => {
-              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                userDocRef.update({ profileImage: downloadURL });
-              });
-            }
-          );
-        }
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        showToast("Failed to update profile image");
+
+    try {
+      if (profileImage) {
+        const response = await fetch(profileImage);
+        const blob = await response.blob();
+
+        const storage = firebase.storage();
+        const storageRef = storage.ref();
+        const fileName = `userData/${firebase.auth().currentUser.uid}/profile_images/${Date.now()}.jpg`;
+
+        const uploadTask = storageRef.child(fileName).put(blob);
+
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(`Upload is ${progress}% done`);
+          },
+          (error) => {
+            console.error('Error uploading image:', error);
+          },
+          () => {
+            uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+              userDocRef.update({ profileImage: downloadURL });
+            });
+          }
+        );
       }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      showToast("Failed to update profile image");
+    }
   };
 
   return (
     <PaperProvider>
       <View style={styles.container}>
-          <View style={styles.profileImage}>
-            {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.image} resizeMode="cover" />
-            ) : (
-              <Image source={require("././../../../assets/pfp.png")} style={styles.image} resizeMode="cover" />
-            )}
-            <TouchableOpacity onPress={uploadImage} style={styles.changeImageButton}>
-              <MaterialCommunityIcons name="pencil" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-        
+        <View style={styles.profileImage}>
+          {profileImage ? (
+            <Image source={{ uri: profileImage }} style={styles.image} resizeMode="cover" />
+          ) : (
+            <Image source={require("././../../../assets/pfp.png")} style={styles.image} resizeMode="cover" />
+          )}
+          <TouchableOpacity onPress={uploadImage} style={styles.changeImageButton}>
+            <MaterialCommunityIcons name="pencil" size={20} color="white" />
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.box1}>
           <View style={styles.inputContainer}>
             <TextInput
               mode="outlined"
               placeholder="First Name"
               style={styles.firstnameSettings}
-              placeholderTextColor="#888888" 
+              placeholderTextColor="#888888"
               value={firstname}
               onChangeText={(text) => setFirstname(text)}
-              
+
             />
             <TextInput
               placeholder="Last Name"
               style={styles.lastnameSettings}
-              placeholderTextColor="#888888" 
+              placeholderTextColor="#888888"
               value={lastname}
               onChangeText={(text) => setLastname(text)}
-              
+
             />
             <TextInput
               placeholder="Email"
               keyboardType="email-address"
               style={styles.emailSettings}
-              placeholderTextColor="#888888" 
+              placeholderTextColor="#888888"
               value={email}
               onChangeText={(text) => setEmail(text)}
               editable={false}
@@ -229,22 +229,22 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 20, 
-    marginTop:40,
+    paddingLeft: 20,
+    marginTop: 40,
   },
   lastnameSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 10,
-    paddingLeft: 20, 
+    paddingLeft: 20,
   },
   emailSettings: {
     backgroundColor: "white",
     borderRadius: 30,
     height: 60,
     marginBottom: 60,
-    paddingLeft: 20, 
+    paddingLeft: 20,
   },
   boxEditProfile: {
     backgroundColor: "#233DFD",

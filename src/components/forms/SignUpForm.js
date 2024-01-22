@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { firebase } from '../../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function SignUpForm({navigation}) {
+export default function SignUpForm({ navigation }) {
 
     const [showPass, setShowPass] = React.useState(true);
     const [showRePass, setShowRePass] = React.useState(true);
@@ -17,39 +17,43 @@ export default function SignUpForm({navigation}) {
 
     const handleRegistration = async (values) => {
         const { firstname, lastname, email, password } = values;
-      
-        try {
-          // Create a new user in Firebase Authentication
-          await firebase.auth().createUserWithEmailAndPassword(email, password);
-      
-          // Send email verification
-          await firebase.auth().currentUser.sendEmailVerification({
-            handleCodeInApp: true,
-            url: 'https://pokus-b9a9f.firebaseapp.com',
-          });
-      
-          showToast('Verification email sent');
-      
-          // Store additional user information in Firestore
-          await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
-            firstname,
-            lastname,
-            email,
-          });
-      
-          // Save user credentials in AsyncStorage
-          await AsyncStorage.setItem('user_email', email);
-          await AsyncStorage.setItem('user_password', password);
 
-      
-          // Dismiss the keyboard
-          Keyboard.dismiss();
+        try {
+            console.log('Creating user in Firebase Authentication...');
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            console.log('Sending email verification...');
+            await user.sendEmailVerification({
+                handleCodeInApp: true,
+                url: 'https://pokus-70a48.firebaseapp.com',
+            });
+
+            console.log('Verification email sent');
+
+            console.log('Storing user information in Firestore...');
+            await firebase.firestore().collection('user').doc(user.uid).collection('userData').doc(user.uid).set({
+                firstname,
+                lastname,
+                email,
+            });
+
+            console.log('User information stored successfully');
+
+            console.log('Saving user credentials in AsyncStorage...');
+            await AsyncStorage.setItem('user_email', email);
+            await AsyncStorage.setItem('user_password', password);
+
+            console.log('User credentials saved successfully');
+
+            console.log('Dismiss the keyboard...');
+            Keyboard.dismiss();
         } catch (error) {
-          // Handle errors
-          showToast(error.message || 'Something went wrong');
+            console.error('Error during registration:', error.message || 'Something went wrong');
+            showToast(error.message || 'Something went wrong');
         }
-      };     
-      
+    };
+
 
     const validationSchema = Yup.object().shape({
         firstname: Yup.string()
@@ -69,34 +73,34 @@ export default function SignUpForm({navigation}) {
         repassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Please confirm your password'),
-      });
+    });
 
 
     const initialValues = {
         firstname: "",
-        lastname:"",
-        email:"",
-        password:"",
-        repassword:"",
+        lastname: "",
+        email: "",
+        password: "",
+        repassword: "",
     }
 
 
-  return (
-    <Formik 
+    return (
+        <Formik
             initialValues={initialValues}
-            onSubmit={async ( values, {resetForm} ) => {
-                await handleRegistration( values, {resetForm} );
+            onSubmit={async (values, { resetForm }) => {
+                await handleRegistration(values, { resetForm });
             }}
             validationSchema={validationSchema}
         >
-            {({ 
-                values, 
-                handleChange, 
+            {({
+                values,
+                handleChange,
                 handleBlur,
                 setFieldError,
                 setFieldTouched,
-                handleSubmit, 
-                isSubmitting, 
+                handleSubmit,
+                isSubmitting,
                 errors,
                 touched,
                 setTouched,
@@ -104,8 +108,8 @@ export default function SignUpForm({navigation}) {
                 // console.debug(errors);
                 return (
                     <View style={styles.container}>
-                
-                        <View style={{flex: 1, justifyContent:'flex-start', alignItems:'flex-start'}}>
+
+                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'flex-start' }}>
                             <IconButton
                                 icon='keyboard-backspace'
                                 iconColor='white'
@@ -115,154 +119,154 @@ export default function SignUpForm({navigation}) {
                                 onPress={() => navigation.navigate('Login')}
                             />
                         </View>
-                
+
                         <View style={styles.signUpWrapper}>
 
-                            <Text style={{textAlign:'center', fontWeight:'bold', fontSize: 50, color: 'white', marginBottom: 40}} variant='displayMedium'>SIGNUP</Text>
-                        
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 50, color: 'white', marginBottom: 40 }} variant='displayMedium'>SIGNUP</Text>
+
                             <View style={styles.usernameWrapper}>
                                 <TextInput
-                                style={styles.textInputUsername}
-                                left={<TextInput.Icon icon="account"/>}
-                                mode='outlined'
-                                placeholder='Firstname'
-                                defaultValue={values.firstname}
-                                value={values.firstname}
-                                // keyboardType='firstname'
-                                onChangeText={handleChange('firstname')}
-                                onBlur={() => {
-                                    handleBlur('firstname');
-                                    setFieldError('firstname', '');  // Reset error for the field
-                                    setFieldTouched('firstname', false);  // Reset touched state for the field
-                                }}
-                                error={errors.firstname && touched.firstname}
-                                onFocus={() => setTouched({ firstname: true }, false)}
+                                    style={styles.textInputUsername}
+                                    left={<TextInput.Icon icon="account" />}
+                                    mode='outlined'
+                                    placeholder='Firstname'
+                                    defaultValue={values.firstname}
+                                    value={values.firstname}
+                                    // keyboardType='firstname'
+                                    onChangeText={handleChange('firstname')}
+                                    onBlur={() => {
+                                        handleBlur('firstname');
+                                        setFieldError('firstname', '');  // Reset error for the field
+                                        setFieldTouched('firstname', false);  // Reset touched state for the field
+                                    }}
+                                    error={errors.firstname && touched.firstname}
+                                    onFocus={() => setTouched({ firstname: true }, false)}
                                 />
 
                                 <TextInput
-                                style={styles.textInputUsername}
-                                left={<TextInput.Icon icon="account"/>}
-                                mode='outlined'
-                                placeholder='Lastname'
-                                defaultValue={values.lastname}
-                                value={values.lastname}
-                                // keyboardType='lastname'
-                                onChangeText={handleChange('lastname')}
-                                onBlur={() => {
-                                    handleBlur('lastname');
-                                    setFieldError('lastname', '');  // Reset error for the field
-                                    setFieldTouched('lastname', false);  // Reset touched state for the field
-                                  }}
-                                error={errors.lastname && touched.lastname}
-                                onFocus={() => setTouched({ lastname: true }, false)}
+                                    style={styles.textInputUsername}
+                                    left={<TextInput.Icon icon="account" />}
+                                    mode='outlined'
+                                    placeholder='Lastname'
+                                    defaultValue={values.lastname}
+                                    value={values.lastname}
+                                    // keyboardType='lastname'
+                                    onChangeText={handleChange('lastname')}
+                                    onBlur={() => {
+                                        handleBlur('lastname');
+                                        setFieldError('lastname', '');  // Reset error for the field
+                                        setFieldTouched('lastname', false);  // Reset touched state for the field
+                                    }}
+                                    error={errors.lastname && touched.lastname}
+                                    onFocus={() => setTouched({ lastname: true }, false)}
                                 />
                             </View>
-                            
+
                             {errors.firstname && touched.firstname && (
-                                <HelperText style={{marginLeft:25}} type="error" visible={errors.firstname }>
+                                <HelperText style={{ marginLeft: 25 }} type="error" visible={errors.firstname}>
                                     {errors.firstname}
                                 </HelperText>
                             )}
                             {errors.lastname && touched.lastname && (
-                                <HelperText style={{marginLeft:25}} type="error" visible={errors.lastname}>
+                                <HelperText style={{ marginLeft: 25 }} type="error" visible={errors.lastname}>
                                     {errors.lastname}
                                 </HelperText>
                             )}
-                
+
                             <TextInput
-                            style={{marginTop: 20}}
-                            left={<TextInput.Icon icon="email"/>}
-                            mode='outlined'
-                            placeholder='Your Email'
-                            defaultValue={values.email}
-                            value={values.email}
-                            keyboardType='email-address'
-                            onChangeText={handleChange('email')}
-                            onBlur={() => {
-                                handleBlur('email');
-                                setFieldError('email', '');  // Reset error for the field
-                                setFieldTouched('email', false);  // Reset touched state for the field
-                              }}
-                            error={errors.email && touched.email}
-                            onFocus={() => setTouched({ email: true }, false)}
+                                style={{ marginTop: 20 }}
+                                left={<TextInput.Icon icon="email" />}
+                                mode='outlined'
+                                placeholder='Your Email'
+                                defaultValue={values.email}
+                                value={values.email}
+                                keyboardType='email-address'
+                                onChangeText={handleChange('email')}
+                                onBlur={() => {
+                                    handleBlur('email');
+                                    setFieldError('email', '');  // Reset error for the field
+                                    setFieldTouched('email', false);  // Reset touched state for the field
+                                }}
+                                error={errors.email && touched.email}
+                                onFocus={() => setTouched({ email: true }, false)}
                             />
                             {errors.email && touched.email && (
-                                <HelperText style={{marginLeft:25}} type="error" visible={errors.email}>
+                                <HelperText style={{ marginLeft: 25 }} type="error" visible={errors.email}>
                                     {errors.email}
                                 </HelperText>
                             )}
-                
+
                             <TextInput
-                            style={{marginTop: 20}}
-                            left={<TextInput.Icon icon="lock"/>}
-                            mode='outlined'
-                            placeholder='Password'
-                            defaultValue={values.password}
-                            value={values.password}
-                            // keyboardType='password'
-                            onChangeText={handleChange('password')}
-                            onBlur={() => {
-                                handleBlur('password');
-                                setFieldError('password', '');  // Reset error for the field
-                                setFieldTouched('password', false);  // Reset touched state for the field
-                              }}
-                            error={errors.password && touched.password}
-                            onFocus={() => setTouched({ password: true }, false)}
-                            secureTextEntry={showPass}
-                            right={
-                                <TextInput.Icon icon={!showPass ? 'eye' : 'eye-off'} onPress={() => setShowPass(!showPass)}/>
-                            }
+                                style={{ marginTop: 20 }}
+                                left={<TextInput.Icon icon="lock" />}
+                                mode='outlined'
+                                placeholder='Password'
+                                defaultValue={values.password}
+                                value={values.password}
+                                // keyboardType='password'
+                                onChangeText={handleChange('password')}
+                                onBlur={() => {
+                                    handleBlur('password');
+                                    setFieldError('password', '');  // Reset error for the field
+                                    setFieldTouched('password', false);  // Reset touched state for the field
+                                }}
+                                error={errors.password && touched.password}
+                                onFocus={() => setTouched({ password: true }, false)}
+                                secureTextEntry={showPass}
+                                right={
+                                    <TextInput.Icon icon={!showPass ? 'eye' : 'eye-off'} onPress={() => setShowPass(!showPass)} />
+                                }
                             />
                             {errors.password && touched.password && (
-                                <HelperText style={{flexDirection:'column',marginLeft:25}} type="error" visible={errors.password}>
+                                <HelperText style={{ flexDirection: 'column', marginLeft: 25 }} type="error" visible={errors.password}>
                                     {errors.password}
                                 </HelperText>
                             )}
-                
+
                             <TextInput
-                            style={{marginTop: 20}}
-                            left={<TextInput.Icon icon="lock"/>}
-                            mode='outlined'
-                            placeholder='Repeat your Password'
-                            defaultValue={values.repassword}
-                            value={values.repassword}
-                            // keyboardType='repassword'
-                            onChangeText={handleChange('repassword')}
-                            onBlur={() => {
-                                handleBlur('repassword');
-                                setFieldError('repassword', '');  // Reset error for the field
-                                setFieldTouched('repassword', false);  // Reset touched state for the field
-                              }}
-                            error={errors.repassword && touched.repassword}
-                            onFocus={() => setTouched({ repassword: true }, false)}
-                            secureTextEntry={showRePass}
-                            right={
-                                <TextInput.Icon icon={!showRePass ? 'eye' : 'eye-off'} onPress={() => setShowRePass(!showRePass)}/>
-                            }
+                                style={{ marginTop: 20 }}
+                                left={<TextInput.Icon icon="lock" />}
+                                mode='outlined'
+                                placeholder='Repeat your Password'
+                                defaultValue={values.repassword}
+                                value={values.repassword}
+                                // keyboardType='repassword'
+                                onChangeText={handleChange('repassword')}
+                                onBlur={() => {
+                                    handleBlur('repassword');
+                                    setFieldError('repassword', '');  // Reset error for the field
+                                    setFieldTouched('repassword', false);  // Reset touched state for the field
+                                }}
+                                error={errors.repassword && touched.repassword}
+                                onFocus={() => setTouched({ repassword: true }, false)}
+                                secureTextEntry={showRePass}
+                                right={
+                                    <TextInput.Icon icon={!showRePass ? 'eye' : 'eye-off'} onPress={() => setShowRePass(!showRePass)} />
+                                }
                             />
                             {errors.repassword && touched.repassword && (
-                                <HelperText style={{marginLeft:25}} type="error" visible={errors.repassword}>
+                                <HelperText style={{ marginLeft: 25 }} type="error" visible={errors.repassword}>
                                     {errors.repassword}
                                 </HelperText>
                             )}
-                
-                            <Button 
+
+                            <Button
                                 loading={isSubmitting}
                                 disabled={isSubmitting || !Object.values(touched).every(Boolean) || !Object.values(values).every(Boolean)}
                                 onPress={handleSubmit}
                                 style={[styles.buttonStyle, (isSubmitting || !Object.values(touched).every(Boolean) || !Object.values(values).every(Boolean)) && styles.disabledButtonStyle]}
-                                icon='account-plus' 
+                                icon='account-plus'
                                 mode='contained'
-                                    >CREATE ACCOUNT
-                                    </Button>
-                
+                            >CREATE ACCOUNT
+                            </Button>
+
                         </View>
-                
+
                     </View>
-                    );
-                }}
-    </Formik>
-  )
+                );
+            }}
+        </Formik>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -271,7 +275,7 @@ const styles = StyleSheet.create({
     },
     signUpWrapper: {
         flex: 3,
-        alignSelf:'center',
+        alignSelf: 'center',
         width: '90%',
     },
     usernameWrapper: {
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         width: '80%',
-        alignSelf:'center',
+        alignSelf: 'center',
         marginTop: 30,
         backgroundColor: '#233DFD',
     },

@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const KhenImage = require('../../../assets/pfp.png');
 
-const DrawerList = [  
+const DrawerList = [
   { icon: 'account-outline', label: 'Home', navigateTo: 'Home' },
   { icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist' },
   { icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker' },
@@ -77,7 +77,7 @@ function DrawerContent(props) {
             } catch (error) {
               console.error('Error removing user credentials from AsyncStorage:', error);
             }
-  
+
             // Sign out from Firebase
             await firebase.auth().signOut();
           },
@@ -96,7 +96,9 @@ function DrawerContent(props) {
   useEffect(() => {
     const userDocRef = firebase
       .firestore()
-      .collection('users')
+      .collection('user')
+      .doc(firebase.auth().currentUser.uid)
+      .collection('userData')
       .doc(firebase.auth().currentUser.uid);
 
     // Set up a real-time listener for user data
@@ -117,7 +119,7 @@ function DrawerContent(props) {
     };
   }, []);
 
-  
+
   return (
     <View style={{ flex: 1, backgroundColor: '#050A30' }}>
       <DrawerContentScrollView {...props} style={{ backgroundColor: '#050A30' }}>
@@ -125,19 +127,19 @@ function DrawerContent(props) {
           <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
             <View style={styles.userInfoSection}>
               <View style={{ flexDirection: 'row', marginTop: 15 }}>
-              {profileImage ?
-                (<Avatar.Image
-                  source={{uri: profileImage}}
-                  size={60}
-                  backgroundColor='transparent'
-                  style={{ marginTop: 5 }}
-                />) :
-                (<Avatar.Image
-                  source={KhenImage}
-                  size={60}
-                  backgroundColor='transparent'
-                  style={{ marginTop: 5 }}
-                />)}
+                {profileImage ?
+                  (<Avatar.Image
+                    source={{ uri: profileImage }}
+                    size={60}
+                    backgroundColor='transparent'
+                    style={{ marginTop: 5 }}
+                  />) :
+                  (<Avatar.Image
+                    source={KhenImage}
+                    size={60}
+                    backgroundColor='transparent'
+                    style={{ marginTop: 5 }}
+                  />)}
                 <View style={{ marginLeft: 10, flexDirection: 'column' }}>
                   <Title style={styles.title}>{firstname} {lastname}</Title>
                   <Text style={styles.caption} numberOfLines={1}>
@@ -151,19 +153,19 @@ function DrawerContent(props) {
             <DrawerItems />
           </View>
 
-          <View style={[styles.drawerSection, {marginTop: 50}]}>
-              <DrawerItem
-                icon={() => (
-                  <Icon name="robot-outline" color={'white'} size={40} />
-                )}
-                label="ChatBot"
-                labelStyle={{ color: 'white' }}
-                onPress={goToChatBot}
-              />
+          <View style={[styles.drawerSection, { marginTop: 50 }]}>
+            <DrawerItem
+              icon={() => (
+                <Icon name="robot-outline" color={'white'} size={40} />
+              )}
+              label="ChatBot"
+              labelStyle={{ color: 'white' }}
+              onPress={goToChatBot}
+            />
           </View>
         </View>
       </DrawerContentScrollView>
-      <View style={[styles.bottomDrawerSection, {top: 15}]}>
+      <View style={[styles.bottomDrawerSection, { top: 15 }]}>
         <DrawerItem
           icon={() => (
             <Icon name="chat-alert-outline" color={'white'} size={40} />

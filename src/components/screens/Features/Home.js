@@ -27,7 +27,7 @@ export default function Home({ navigation }) {
   const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
-    const userDocRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+    const userDocRef = firebase.firestore().collection('user').doc(firebase.auth().currentUser.uid).collection('userData').doc(firebase.auth().currentUser.uid);
   
     // Set up a real-time listener for user data
     const unsubscribe = userDocRef.onSnapshot((snapshot) => {

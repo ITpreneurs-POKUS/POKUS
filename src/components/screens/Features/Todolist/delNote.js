@@ -1,38 +1,38 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Notifications from "expo-notifications";
-import { Alert } from "react-native";
+import { Alert } from 'react-native';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db, firebase } from '../../../../../firebase';
+import * as Notifications from 'expo-notifications';
 
-
-async function delNote (note, navigation){
-    if(note.id === undefined){
-        Alert.alert("Error", "No Notes Selected", [
+async function delNote(note, navigation) {
+    if (note.id === undefined) {
+        Alert.alert('Error', 'No Notes Selected', [
             {
-              text: "OK",
-              style: "cancel",
+                text: 'OK',
+                style: 'cancel',
             },
-          ]);
-    }else{
+        ]);
+    } else {
         try {
-            const data = JSON.parse(await AsyncStorage.getItem('todoNotes'))
-            for (let i = 0; i < data.length; i++){
-                if (data[i].id === note.id){
-                    data.splice(i, 1);
-                }
+            const userTodoRef = doc(db, 'user', firebase.auth().currentUser.uid, 'userTodo', note.id);
+            
+            await deleteDoc(userTodoRef);
+
+            // Cancel scheduled notification if Notification_id is present
+            if (note.Notification_id !== null) {
+                await Notifications.cancelScheduledNotificationAsync(note.Notification_id);
             }
-            if (note.NotificationsId !== null){
-                await Notifications.cancelAllScheduledNotificationsAsync(note.NotificationsId)
-            }
-            await AsyncStorage.setItem('todoNotes', JSON.stringify(data));
+
             navigation.goBack();
         } catch (err) {
-            console.log(err)
-            Alert.alert("Error", "There is an error!", [
+            console.log(err);
+            Alert.alert('Error', 'There is an error!', [
                 {
-                  text: "OK",
-                  style: "cancel",
+                    text: 'OK',
+                    style: 'cancel',
                 },
-              ]);
+            ]);
         }
     }
 }
+
 export default delNote;
