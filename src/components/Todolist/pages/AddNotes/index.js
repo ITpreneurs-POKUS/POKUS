@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { //WORKING TO VERSION
+import react, { useEffect, useLayoutEffect, useState } from "react";
+import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
@@ -7,7 +7,6 @@ import { //WORKING TO VERSION
   TextInput,
   ScrollView,
   Text,
-  Alert,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import styles from "./styles";
@@ -26,46 +25,10 @@ function AddNotes({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    console.log('test');
     if (route.params.note) {
-      console.log('test2', route.params.note);
-      const { Date: noteDate, Note, Notification_id, Title, id } = route.params.note;
-      const formattedDate = noteDate ? new Date(noteDate.seconds * 1000) : null;
-      const formattedNote = {
-        date: formattedDate,
-        note: Note,
-        notificationId: Notification_id,
-        title: Title,
-        id: id,
-      };
-      setNote(formattedNote);
+      setNote(route.params.note);
     }
   }, [route.params.note]);
-
-  const handleSaveNote = () => {
-    try {
-      const noteToSave = {
-        id: note.id,
-        title: note.title,
-        note: note.note,
-        date: note.scheduledDate || null,
-        notificationId: note.notificationId,
-      };
-      console.log("Addnote:", noteToSave.date);
-      saveNote(noteToSave, navigation, note);
-    } catch (error) {
-      console.error("Error saving note:", error);
-      Alert.alert("Error", "Failed to save note.", [{ text: "OK" }]);
-    }
-  };
-
-  const handleDeleteNote = () => {
-    try {
-      delNote(note, navigation);  // <-- Check this line
-    } catch (error) {
-      Alert.alert("Error", "Failed to delete note.", [{ text: "OK" }]);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,22 +48,16 @@ function AddNotes({ route, navigation }) {
           maxLength={40}
           value={note.title}
           placeholder={"Title"}
-          onChangeText={(text) => {
-            console.log('Title:', text);
-            setNote({ ...note, title: text });
-          }}
-        />
+          onChangeText={(text) => setNote({ ...note, title: text })}
+        ></TextInput>
         <TextInput
           style={styles.textInput}
           multiline={true}
           value={note.note}
           placeholder={"Description"}
           textAlignVertical="top"
-          onChangeText={(text) => {
-            console.log('Note:', text);
-            setNote({ ...note, note: text });
-          }}
-        />
+          onChangeText={(text) => setNote({ ...note, note: text })}
+        ></TextInput>
 
         <TouchableOpacity
           style={[
@@ -126,7 +83,6 @@ function AddNotes({ route, navigation }) {
           setDate={setDate}
           note={note}
           setNote={setNote}
-          onSchedule={(scheduledDate) => setNote({ ...note, scheduledDate, notificationId })}
         />
       </ScrollView>
 
@@ -142,14 +98,14 @@ function AddNotes({ route, navigation }) {
       >
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: "#017CE9" }]}
-          onPress={handleSaveNote}
+          onPress={() => saveNote(note, navigation)}
         >
           <Feather name="save" size={29} color="white" />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: "#c70000" }]}
-          onPress={handleDeleteNote}
+          onPress={() => delNote(note, navigation)}
         >
           <Feather name="trash-2" size={29} color="white" />
         </TouchableOpacity>

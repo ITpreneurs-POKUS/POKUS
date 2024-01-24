@@ -1,40 +1,36 @@
-import { Alert } from "react-native";
-import { firebase } from '../../../../../firebase'; // Import the correct path to your firebase module
-import * as Notifications from "expo-notifications";
+import { Alert } from 'react-native';
+import { deleteDoc, doc } from 'firebase/firestore';
+import { db, firebase } from '../../../../../firebase';
+import * as Notifications from 'expo-notifications';
 
-async function delNote (note, navigation){
-    if(note.id === undefined){
-        Alert.alert("Error", "No Notes Selected", [
+async function delNote(note, navigation) {
+    if (note.id === undefined) {
+        Alert.alert('Error', 'No Notes Selected', [
             {
-              text: "OK",
-              style: "cancel",
+                text: 'OK',
+                style: 'cancel',
             },
-          ]);
+        ]);
     } else {
         try {
-            const user = firebase.auth().currentUser;
-            const userNotesRef = firebase.firestore().collection('users').doc(user.uid).collection('todoNotes').doc(note.id);
+            const userTodoRef = doc(db, 'users', firebase.auth().currentUser.uid, 'userTodo', note.id);
+            
+            await deleteDoc(userTodoRef);
 
-            // Retrieve the notification ID before deleting the note
-            const notificationId = note.notificationId;
-
-            // Delete the note from Firestore
-            await userNotesRef.delete();
-
-            // If the note had a scheduled notification, cancel it
-            if (notificationId !== null){
-                await Notifications.cancelScheduledNotificationAsync(notificationId);
-            }
+            // Cancel scheduled notification if Notification_id is present
+            if (note.notificationId !== null) {
+                await Notifications.cancelScheduledNotificationAsync(note.notificationId);
+              }              
 
             navigation.goBack();
         } catch (err) {
             console.log(err);
-            Alert.alert("Error", "There is an error!", [
+            Alert.alert('Error', 'There is an error!', [
                 {
-                  text: "OK",
-                  style: "cancel",
+                    text: 'OK',
+                    style: 'cancel',
                 },
-              ]);
+            ]);
         }
     }
 }

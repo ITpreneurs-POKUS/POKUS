@@ -38,7 +38,18 @@
       "config": {
         "googleServicesFile": "./google-services.json",
         "usesAudio": true
-      }
+      },
+      "plugins": [
+        [
+          "expo-background-fetch",
+          {
+            "taskName": "TIMER_TASK",
+            "options": {
+              "minimumInterval": 15
+            }
+          }
+        ]
+      ]
     },
     "web": {
       "allowNotifications": true,

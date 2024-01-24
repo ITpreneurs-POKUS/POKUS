@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { firebase } from '../../../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { resetStore } from '../screens/Features/FlashCards/src/actions';
+import { useDispatch } from 'react-redux';
 
 const KhenImage = require('../../../assets/pfp.png');
 
@@ -56,6 +58,8 @@ function DrawerContent(props) {
   const handleSendEmail = () => {
     navigation.navigate("Email");
   }
+  
+  const dispatch = useDispatch();
 
   const handleSignOut = async () => {
     // Display an alert when the "Sign Out" button is pressed
@@ -74,6 +78,7 @@ function DrawerContent(props) {
             try {
               await AsyncStorage.removeItem('user_email');
               await AsyncStorage.removeItem('user_password');
+              dispatch(resetStore());
             } catch (error) {
               console.error('Error removing user credentials from AsyncStorage:', error);
             }

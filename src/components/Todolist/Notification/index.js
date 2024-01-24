@@ -5,7 +5,7 @@ import * as Notifications from "expo-notifications";
 import { Audio } from 'expo-av';
 import Style from "./styles";
 
-Notifications.setNotificationHandler({ //WORKING TO VERSION
+Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
@@ -16,13 +16,11 @@ Notifications.setNotificationHandler({ //WORKING TO VERSION
 const ModalNotification = ({
   modalVisible,
   setModalVisible,
-  date: propDate,  // Rename prop to avoid confusion
-  setDate: propSetDate,  // Rename prop to avoid confusion
+  date,
+  setDate,
   note,
   setNote,
-  onSchedule,
 }) => {
-  const [date, setDate] = useState(propDate);
   const [showPicker, setShowPicker] = useState({
     showDate: false,
     showHours: false,
@@ -41,7 +39,6 @@ const ModalNotification = ({
 
   const schedulePushNotification = async () => {
     const scheduledDate = date;
-    
 
     const id = await Notifications.scheduleNotificationAsync({
       content: {
@@ -53,7 +50,7 @@ const ModalNotification = ({
       },
     });
 
-    setNote({ ...note, notificationId: id, scheduledDate: scheduledDate });  // Add scheduledDate to the state
+    setNote({ ...note, notificationId: id });
 
     // Listen for the scheduled notification
     Notifications.addNotificationReceivedListener(async (notification) => {
@@ -61,15 +58,14 @@ const ModalNotification = ({
         playNotificationSound();
       }
     });
-    onSchedule(scheduledDate);
 
+    
   };
 
   const onChange = (event, selectedDate) => {
     setShowPicker({ showDate: false, showHours: false });
     const currentDate = selectedDate || date;
     setDate(currentDate);
-    propSetDate(currentDate);  // Pass the date back to AddNotes using the prop function
   };
 
   const currentFormattedData = (type) => {
@@ -142,9 +138,7 @@ const ModalNotification = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={[Style.button, Style.buttonCancel]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
+              onPress={() => setModalVisible(!modalVisible)}
             >
               <Text style={Style.textStyle}>CANCEL</Text>
             </TouchableOpacity>

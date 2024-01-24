@@ -21,4 +21,15 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-export { firebase };
+const db = firebase.firestore();
+const settings = { timestampsInSnapshots: true, ignoreUndefinedProperties: true };
+db.settings(settings);
+
+// Enable experimentalForceLongPolling for Firestore
+const firestoreConfig = {
+  experimentalForceLongPolling: true,
+};
+const firestore = firebase.firestore(firebase.app());
+firestore.settings(firestoreConfig);
+
+export { firebase, db };

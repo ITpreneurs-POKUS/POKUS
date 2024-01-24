@@ -22,29 +22,22 @@ export default function Todolist({ navigation }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchData = async () => {
-        setLoading(true);
-        try {
-          const user = firebase.auth().currentUser;
-          const userNotesRef = firebase.firestore().collection('users').doc(user.uid).collection('userTodo');
-  
-          const querySnapshot = await userNotesRef.get();
-          const notesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-  
-          // Update the data state with the fetched data
-          setData(notesData);
-        } catch (err) {
-          console.log(err);
-          alert("Error loading notes");
-        } finally {
-          setLoading(false);
-        }
+      setLoading(true);
+
+      const user = firebase.auth().currentUser;
+      const userNotesRef = firebase.firestore().collection('users').doc(user.uid).collection('todoNotes');
+
+      const unsubscribe = userNotesRef.onSnapshot((snapshot) => {
+        const notesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setData(notesData);
+        setLoading(false);
+      });
+
+      return () => {
+        unsubscribe(); // Cleanup subscription on component unmount
       };
-  
-      fetchData();
     }, [])
   );
-  
 
   if (loading) {
     return (
