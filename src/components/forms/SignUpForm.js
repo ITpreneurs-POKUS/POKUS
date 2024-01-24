@@ -31,11 +31,17 @@ export default function SignUpForm({navigation}) {
           showToast('Verification email sent');
       
           // Store additional user information in Firestore
-          await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
-            firstname,
-            lastname,
-            email,
-          });
+          const userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
+
+            try {
+                await userRef.set({
+                    firstname,
+                    lastname,
+                    email,
+                });
+                } catch (error) {
+            console.error('Error writing to Firestore:', error);
+            }
       
           // Save user credentials in AsyncStorage
           await AsyncStorage.setItem('user_email', email);

@@ -1,7 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Notifications from "expo-notifications";
 import { Alert } from "react-native";
-
+import { firebase } from '../../../../../firebase'; // Import the correct path to your firebase module
+import * as Notifications from "expo-notifications";
 
 async function delNote (note, navigation){
     if(note.id === undefined){
@@ -11,21 +10,25 @@ async function delNote (note, navigation){
               style: "cancel",
             },
           ]);
-    }else{
+    } else {
         try {
-            const data = JSON.parse(await AsyncStorage.getItem('todoNotes'))
-            for (let i = 0; i < data.length; i++){
-                if (data[i].id === note.id){
-                    data.splice(i, 1);
-                }
+            const user = firebase.auth().currentUser;
+            const userNotesRef = firebase.firestore().collection('users').doc(user.uid).collection('todoNotes').doc(note.id);
+
+            // Retrieve the notification ID before deleting the note
+            const notificationId = note.notificationId;
+
+            // Delete the note from Firestore
+            await userNotesRef.delete();
+
+            // If the note had a scheduled notification, cancel it
+            if (notificationId !== null){
+                await Notifications.cancelScheduledNotificationAsync(notificationId);
             }
-            if (note.NotificationsId !== null){
-                await Notifications.cancelAllScheduledNotificationsAsync(note.NotificationsId)
-            }
-            await AsyncStorage.setItem('todoNotes', JSON.stringify(data));
+
             navigation.goBack();
         } catch (err) {
-            console.log(err)
+            console.log(err);
             Alert.alert("Error", "There is an error!", [
                 {
                   text: "OK",
@@ -35,4 +38,5 @@ async function delNote (note, navigation){
         }
     }
 }
+
 export default delNote;

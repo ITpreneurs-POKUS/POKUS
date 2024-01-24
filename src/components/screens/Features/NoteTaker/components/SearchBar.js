@@ -16,7 +16,7 @@ const SearchBar = ({ containerStyle, value, onClear, onChangeText }) => {
         <AntDesign
           name='close'
           size={20}
-          color={colors.PRIMARY}
+          color={colors.BLACK}
           onPress={onClear}
           style={styles.clearIcon}
         />

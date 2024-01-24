@@ -16,6 +16,7 @@ import RoundIconBtn from '../components/RoundIconBtn';
 import SearchBar from '../components/SearchBar';
 import { useNotes } from '../contexts/NoteProvider';
 import colors from '../misc/colors';
+import { firebase } from '../../../../../../firebase';
 
 const reverseData = data => {
   return data.sort((a, b) => {
@@ -34,13 +35,47 @@ const NoteScreen = ({ navigation }) => {
 
   const { notes, setNotes, findNotes } = useNotes();
 
+  React.useEffect(() => {
+    const unsubscribe = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection('userNotes').onSnapshot((snapshot) => {
+      const updatedNotes = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setNotes(updatedNotes);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   const reverseNotes = reverseData(notes);
 
   const handleOnSubmit = async (title, desc) => {
-    const note = { id: Date.now(), title, desc, time: Date.now() };
-    const updatedNotes = [...notes, note];
-    setNotes(updatedNotes);
-    await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes));
+    try {
+      const user = firebase.auth().currentUser;
+  
+      if (!user) {
+        // Handle the case where the user is not logged in
+        console.error('User is not logged in');
+        return;
+      }
+  
+      const noteRef = firebase.firestore().collection('users').doc(user.uid).collection('userNotes').doc();
+  
+      const note = {
+        id: noteRef.id,
+        title,
+        desc,
+        time: Date.now(),
+      };
+  
+      // Store the note in Firestore
+      await noteRef.set(note);
+  
+      // Update the local state
+      const updatedNotes = [...notes, note];
+      setNotes(updatedNotes);
+    } catch (error) {
+      console.error('Error storing note in Firestore:', error.message || 'Something went wrong');
+    }
   };
 
   const openNote = note => {

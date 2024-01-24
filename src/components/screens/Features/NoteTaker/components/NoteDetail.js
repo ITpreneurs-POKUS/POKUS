@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Alert } from 'react-native';
 import colors from '../misc/colors';
 import RoundIconBtn from './RoundIconBtn';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotes } from '../contexts/NoteProvider';
 import NoteInputModal from './NoteInputModal';
+import { firebase } from '../../../../../../firebase';
 
 const formatDate = (ms) => {
   const date = new Date(ms);
@@ -22,23 +22,32 @@ const formatDate = (ms) => {
   return `${month}/${day}/${year} - ${hrs}:${min} ${ampm}`;
 };
 
-
 const NoteDetail = (props) => {
   const [note, setNote] = useState(props.route.params.note);
-  
-  const { setNotes } = useNotes();
+  const { setNotes, notes } = useNotes();
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
 
   const deleteNote = async () => {
-    const result = await AsyncStorage.getItem('notes');
-    let notes = [];
-    if (result !== null) notes = JSON.parse(result);
+    try {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        console.error('User is not logged in');
+        return;
+      }
 
-    const newNotes = notes.filter(n => n.id !== note.id);
-    setNotes(newNotes);
-    await AsyncStorage.setItem('notes', JSON.stringify(newNotes));
-    props.navigation.goBack();
+      // Delete the note from Firestore
+      await firebase.firestore().collection('users').doc(user.uid).collection('userNotes').doc(note.id).delete();
+
+      // Update the local state
+      const newNotes = notes.filter(n => n.id !== note.id);
+      setNotes(newNotes);
+
+      // Navigate back
+      props.navigation.goBack();
+    } catch (error) {
+      console.error('Error deleting note from Firestore:', error.message || 'Something went wrong');
+    }
   };
 
   const displayDeleteAlert = () => {
@@ -64,25 +73,32 @@ const NoteDetail = (props) => {
   };
 
   const handleUpdate = async (title, desc, time) => {
-    const result = await AsyncStorage.getItem('notes');
-    let notes = [];
-    if (result !== null) notes = JSON.parse(result);
-
-    const newNotes = notes.filter(n => {
-      if (n.id === note.id) {
-        n.title = title;
-        n.desc = desc;
-        n.isUpdated = true;
-        n.time = time;
-
-        setNote(n);
+    try {
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        console.error('User is not logged in');
+        return;
       }
-      return n;
-    });
 
-    setNotes(newNotes);
-    await AsyncStorage.setItem('notes', JSON.stringify(newNotes));
+      const noteRef = firebase.firestore().collection('users').doc(user.uid).collection('userNotes').doc(note.id);
+
+      // Update the note in Firestore
+      await noteRef.update({
+        title,
+        desc,
+        isUpdated: true,
+        time,
+      });
+
+      // Update the local state
+      const updatedNotes = notes.map(n => (n.id === note.id ? { ...n, title, desc, isUpdated: true, time } : n));
+      setNotes(updatedNotes);
+      setNote({ ...note, title, desc, isUpdated: true, time });
+    } catch (error) {
+      console.error('Error updating note in Firestore:', error.message || 'Something went wrong');
+    }
   };
+
   const handleOnClose = () => setShowModal(false);
 
   const openEditModal = () => {

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { firebase } from '../../../../../../../firebase'; // Make sure to import the correct path to your firebase module
 import SearchBar from "../../SearchBar";
 import Style from "./styles";
 import Colors from "../../styles/colors";
@@ -23,25 +23,22 @@ export default function Todolist({ navigation }) {
   useFocusEffect(
     React.useCallback(() => {
       setLoading(true);
-      const getData = async () => {
-        try {
-          let notes = await AsyncStorage.getItem("todoNotes");
-          if (notes === undefined || notes === null) {
-            notes = "[]";
-          }
-          if (notes.length > 0 && notes[0] !== "[") {
-            notes = `[${notes}]`;
-          }
-          setData(JSON.parse(notes));
-          setLoading(false);
-        } catch (err) {
-          console.log(err);
-          alert("Error loading notes");
-        }
+
+      const user = firebase.auth().currentUser;
+      const userNotesRef = firebase.firestore().collection('users').doc(user.uid).collection('todoNotes');
+
+      const unsubscribe = userNotesRef.onSnapshot((snapshot) => {
+        const notesData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setData(notesData);
+        setLoading(false);
+      });
+
+      return () => {
+        unsubscribe(); // Cleanup subscription on component unmount
       };
-      getData();
     }, [])
   );
+
   if (loading) {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -60,7 +57,7 @@ export default function Todolist({ navigation }) {
         ]}
       >
   
-        <View style = {style.list}>
+        <View style={style.list}>
           <SearchBar data={data} onChange={setData} />
           <FlatList
             ListEmptyComponent={

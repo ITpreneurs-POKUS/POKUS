@@ -41,8 +41,8 @@ export function resetStore() {
   };
 }
 export function handleInitialData() {
-  return dispatch => {
-    return getDecks().then(decks => {
+  return async dispatch => {
+    return await getDecks().then(decks => {
       dispatch(receiveDecks(decks));
     });
   };
