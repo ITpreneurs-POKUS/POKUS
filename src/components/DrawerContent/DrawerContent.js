@@ -160,7 +160,7 @@ function DrawerContent(props) {
 
         </View>
       </DrawerContentScrollView>
-      <View style={[styles.bottomDrawerSection, { top: 15 }]}>
+      <View style={{ bottom: 30, borderBottomWidth: 5, borderBottomColor: '#dedede' }}>
         <DrawerItem
           icon={() => (
             <Icon name="chat-alert-outline" color={'white'} size={40} />
@@ -173,10 +173,10 @@ function DrawerContent(props) {
       <View style={styles.bottomDrawerSection}>
         <DrawerItem
           icon={() => (
-            <Icon name="exit-to-app" color={'white'} size={40} />
+            <Icon name="exit-to-app" color={'red'} size={40} />
           )}
           label="Sign Out"
-          labelStyle={{ color: 'white' }}
+          labelStyle={{ color: 'red' }}
           onPress={handleSignOut}
         />
       </View>
@@ -226,8 +226,10 @@ const styles = StyleSheet.create({
   },
   bottomDrawerSection: {
     marginBottom: 15,
-    borderBottomColor: '#dedede',
-    borderBottomWidth: 1,
+    borderTopColor: 'red',
+    borderTopWidth: 2,
+    borderBottomColor: 'red',
+    borderBottomWidth: 2,
     backgroundColor: '#050A30',
   },
   preference: {
