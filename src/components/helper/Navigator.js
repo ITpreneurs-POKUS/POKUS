@@ -179,9 +179,7 @@ function HomeStack() {
           }}
         />
 
-        <HomeStack.Screen name="Timer" component={TimerTab} />
         <HomeStack.Screen name="ChatBot" component={ChatBot} />
-
         <HomeStack.Screen name="FlashCard" component={BottomTabs} />
         <HomeStack.Screen name="DeckList" component={DeckList} />
         <HomeStack.Screen
@@ -199,6 +197,7 @@ function HomeStack() {
           component={Quiz}
           options={{ headerShown: false }}
         />
+        <HomeStack.Screen name="Timer" component={TimerTab} />
         <HomeStack.Screen name="Email" component={SendEmailScreen} />
         <HomeStack.Screen
           name="Profile"

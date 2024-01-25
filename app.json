@@ -9,7 +9,11 @@
     "splash": {
       "image": "./assets/SplashScreen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#050A30"
+      "backgroundColor": "#050A30",
+      "android": {
+        "fadeOutDuration": 3000,
+        "fadeOutMode": "delay"
+      }
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -27,7 +31,9 @@
         "splash": {
           "image": "./assets/SplashScreen.png",
           "resizeMode": "contain",
-          "backgroundColor": "#050A30"
+          "backgroundColor": "#050A30",
+          "fadeOutDuration": 3000,
+          "fadeOutMode": "delay"
         }
       },
       "package": "com.pokus.app",
