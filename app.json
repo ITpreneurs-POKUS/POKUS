@@ -6,6 +6,10 @@
     "orientation": "portrait",
     "icon": "./assets/PokusLogo.png",
     "userInterfaceStyle": "light",
+    "notification":{
+      "icon":"./assets/PokusLogo.png",
+      "color":"#050A30"
+    },
     "splash": {
       "image": "./assets/SplashScreen.png",
       "resizeMode": "contain",
@@ -23,6 +27,8 @@
       }
     },
     "android": {
+      "icon": "./assets/notifPokusLogo.png",
+      "color":"#050A30",
       "adaptiveIcon": {
         "useNextNotificationsApi": true,
         "foregroundImage": "./assets/PokusLogo.png",
@@ -39,7 +45,9 @@
       "package": "com.pokus.app",
       "notification": {
         "androidMode": "default",
-        "sound": true
+        "sound": true,
+        "icon": "./assets/notifPokusLogo.png",
+        "color":"#050A30"
       },
       "config": {
         "googleServicesFile": "./google-services.json",
