@@ -24,8 +24,8 @@ const LogoImage = require('../../../assets/LogoPokus.png');
       style={[styles.buttonStyle, styles.signupBotton]}
       icon='account-plus'
       mode='contained'
-      buttonColor='blue'
-      textColor='#233DFD'
+      buttonColor='#FFFFFF'
+      textColor='#FFFFFF'
       onPress={() => navigation.navigate('Signup')}
         >SIGNUP
         </Button>
@@ -67,9 +67,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     signupBotton: {
-      backgroundColor: 'white',
-      borderColor: '#233DFD',
-      borderWidth: 2,
+      backgroundColor: '#233DFD',
     },
     loginContainer: {
       flexDirection: 'row',
