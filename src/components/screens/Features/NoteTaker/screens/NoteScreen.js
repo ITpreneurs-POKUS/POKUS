@@ -186,9 +186,18 @@ const styles = StyleSheet.create({
   addBtn: {
     position: 'absolute',
     right: 15,
+    marginBottom: 20,
     bottom: 50,
     zIndex: 1,
     backgroundColor: colors.POKUS,
+    shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.24,
+        elevation: 5
   },
 });
 
