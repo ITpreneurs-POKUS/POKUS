@@ -10,31 +10,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { resetStore } from '../screens/Features/FlashCards/src/actions';
 import { useDispatch } from 'react-redux';
 
-const KhenImage = require('../../../assets/pfp.png');
-
 const DrawerList = [  
   { icon: 'account-outline', label: 'Home', navigateTo: 'Home' },
   { icon: 'check-circle-outline', label: 'Todolist', navigateTo: 'Todolist' },
   { icon: 'note-edit-outline', label: 'NoteTaker', navigateTo: 'NoteTaker' },
   { icon: 'checkbox-multiple-blank-outline', label: 'FlashCard', navigateTo: 'FlashCard' },
   { icon: 'timer-sand', label: 'Timer', navigateTo: 'Timer' },
+  { icon: 'robot-outline', label: 'ChatBot', navigateTo: 'ChatBot' },
 ];
 
-const DrawerLayout = ({ icon, label, navigateTo }) => {
+const DrawerLayout = ({ icon, label, navigateTo, isActive, onPress }) => {
   const navigation = useNavigation();
   return (
     <DrawerItem
-      icon={() => <Icon name={icon} color={'white'} size={40} />}
+      icon={() => <Icon name={icon} color={isActive ? '#233DFD' : 'white'} size={40} />}
       label={label}
       onPress={() => {
+        onPress();
         navigation.navigate(navigateTo);
       }}
-      labelStyle={{ color: 'white' }}
+      labelStyle={{ color: isActive ? '#233DFD' : 'white' }}
     />
   );
 };
 
-const DrawerItems = props => {
+const DrawerItems = ({ activeItem, setActiveItem }) => {
   return DrawerList.map((el, i) => {
     return (
       <DrawerLayout
@@ -42,23 +42,22 @@ const DrawerItems = props => {
         icon={el.icon}
         label={el.label}
         navigateTo={el.navigateTo}
+        isActive={activeItem === el.navigateTo}
+        onPress={() => setActiveItem(el.navigateTo)}
       />
     );
   });
 };
 
-
 function DrawerContent(props) {
   const navigation = useNavigation();
-
-  const goToChatBot = () => {
-    navigation.navigate("ChatBot")
-  }
+  const [activeItem, setActiveItem] = useState('Home'); // Default active item is 'Home'
 
   const handleSendEmail = () => {
-    navigation.navigate("Email");
-  }
-  
+    setActiveItem('Email');
+    navigation.navigate('Email');
+  };
+
   const dispatch = useDispatch();
 
   const handleSignOut = async () => {
@@ -82,7 +81,7 @@ function DrawerContent(props) {
             } catch (error) {
               console.error('Error removing user credentials from AsyncStorage:', error);
             }
-  
+
             // Sign out from Firebase
             await firebase.auth().signOut();
           },
@@ -91,7 +90,6 @@ function DrawerContent(props) {
       { cancelable: false }
     );
   };
-
 
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
@@ -122,27 +120,30 @@ function DrawerContent(props) {
     };
   }, []);
 
-  
   return (
     <View style={{ flex: 1, backgroundColor: '#050A30' }}>
       <DrawerContentScrollView {...props} style={{ backgroundColor: '#050A30' }}>
+
         <View style={styles.drawerContent}>
+
           <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Profile')}>
             <View style={styles.userInfoSection}>
               <View style={{ flexDirection: 'row', marginTop: 15 }}>
-              {profileImage ?
-                (<Avatar.Image
-                  source={{uri: profileImage}}
-                  size={60}
-                  backgroundColor='transparent'
-                  style={{ marginTop: 5 }}
-                />) :
-                (<Avatar.Image
-                  source={KhenImage}
-                  size={60}
-                  backgroundColor='transparent'
-                  style={{ marginTop: 5 }}
-                />)}
+                {profileImage ? (
+                  <Avatar.Image
+                    source={{ uri: profileImage }}
+                    size={60}
+                    backgroundColor='transparent'
+                    style={{ marginTop: 5 }}
+                  />
+                ) : (
+                  <Avatar.Image
+                    source={require('../../../assets/pfp.png')}
+                    size={60}
+                    backgroundColor='transparent'
+                    style={{ marginTop: 5 }}
+                  />
+                )}
                 <View style={{ marginLeft: 10, flexDirection: 'column' }}>
                   <Title style={styles.title}>{firstname} {lastname}</Title>
                   <Text style={styles.caption} numberOfLines={1}>
@@ -152,23 +153,14 @@ function DrawerContent(props) {
               </View>
             </View>
           </TouchableOpacity>
+
           <View style={styles.drawerSection}>
-            <DrawerItems />
+            <DrawerItems activeItem={activeItem} setActiveItem={setActiveItem} />
           </View>
 
-          <View style={[styles.drawerSection, {marginTop: 50}]}>
-              <DrawerItem
-                icon={() => (
-                  <Icon name="robot-outline" color={'white'} size={40} />
-                )}
-                label="ChatBot"
-                labelStyle={{ color: 'white' }}
-                onPress={goToChatBot}
-              />
-          </View>
         </View>
       </DrawerContentScrollView>
-      <View style={[styles.bottomDrawerSection, {top: 15}]}>
+      <View style={[styles.bottomDrawerSection, { top: 15 }]}>
         <DrawerItem
           icon={() => (
             <Icon name="chat-alert-outline" color={'white'} size={40} />
@@ -244,4 +236,4 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
   },
-}); 
+});

@@ -154,7 +154,8 @@ function HomeStack() {
           },
         }}
       >
-        <HomeStack.Screen name="Home" component={HomeScreen} />
+        <HomeStack.Screen options={{headerTitle: ''}} name="Home2" component={HomeScreen} />
+        <HomeStack.Screen options={{headerTitle: ''}} name="Home" component={HomeScreen} />
         <HomeStack.Screen name="Todolist" component={Todolist} />
         <HomeStack.Screen
           name="AddNotes"

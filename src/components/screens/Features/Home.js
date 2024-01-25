@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
@@ -186,9 +187,21 @@ const styles = StyleSheet.create({
     width: width * 0.5,
     height: width * 0.5,
     borderRadius: width * 0.3,
-    overflow: "hidden",
+    overflow: 'hidden',
     zIndex: 1,
     bottom: 20,
+    // Add shadow properties based on platform
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
   },
   boxUsername: {
     backgroundColor: "#233DFD",
