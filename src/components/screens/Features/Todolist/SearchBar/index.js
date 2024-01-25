@@ -4,19 +4,16 @@ import Style from "./style";
 
 export default function SearchBar({ data, onChange }) {
   const [masterData, setMasterData] = useState(data);
+
   const search = (text) => {
     if (text) {
-      const newData = data.filter((item) => {
-        const itemTitle = item.title
-          ? item.title.toUpperCase()
-          : "".toUpperCase();
-        const titleSearch = text.toUpperCase();
-        console.log('data present');
-        return itemTitle.indexOf(titleSearch) > -1;
+      const searchText = text.toLowerCase();
+      const newData = masterData.filter((item) => {
+        const itemTitle = item.Title ? item.Title.toLowerCase() : "";
+        return itemTitle.includes(searchText);
       });
       onChange(newData);
     } else {
-      console.log('data absent');
       onChange(masterData);
     }
   };
@@ -25,7 +22,7 @@ export default function SearchBar({ data, onChange }) {
     <View
       style={[
         Style.searchArea,
-        { padding: Platform.OS === "android" ? 12 : 20},
+        { padding: Platform.OS === "android" ? 12 : 20 },
       ]}
     >
       <TextInput
