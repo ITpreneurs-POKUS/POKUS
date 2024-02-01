@@ -6,23 +6,64 @@
     "orientation": "portrait",
     "icon": "./assets/PokusLogo.png",
     "userInterfaceStyle": "light",
-    "backgroundColor": "#050A30",
+    "notification":{
+      "icon":"./assets/PokusLogo.png",
+      "color":"#050A30"
+    },
     "splash": {
-      "image": "./assets/SplashScreen.png",
+      "image": "./assets/Splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#050A30"
+      "backgroundColor": "#050A30",
+      "android": {
+        "fadeOutDuration": 3000,
+        "fadeOutMode": "delay"
+      }
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesAudio": true
+      }
     },
     "android": {
+      "icon": "./assets/notifPokusLogo.png",
+      "color":"#050A30",
       "adaptiveIcon": {
+        "useNextNotificationsApi": true,
         "foregroundImage": "./assets/PokusLogo.png",
-        "backgroundColor": "#050A30"
+        "backgroundColor": "#050A30",
+        "permissions": ["NOTIFICATIONS", "READ_EXTERNAL_STORAGE"],
+        "splash": {
+          "image": "./assets/Splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#050A30",
+          "fadeOutDuration": 3000,
+          "fadeOutMode": "delay"
+        }
       },
-
-      "package": "com.pokus.app"
+      "package": "com.pokus.app",
+      "notification": {
+        "androidMode": "default",
+        "sound": true,
+        "icon": "./assets/notifPokusLogo.png",
+        "color":"#050A30"
+      },
+      "config": {
+        "googleServicesFile": "./google-services.json",
+        "usesAudio": true
+      },
+      "plugins": [
+        [
+          "expo-background-fetch",
+          {
+            "taskName": "TIMER_TASK",
+            "options": {
+              "minimumInterval": 15
+            }
+          }
+        ]
+      ]
     },
     "web": {
       "allowNotifications": true,

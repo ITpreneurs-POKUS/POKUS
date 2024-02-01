@@ -23,7 +23,7 @@ const DrawerLayout = ({ icon, label, navigateTo, isActive, onPress }) => {
   const navigation = useNavigation();
   return (
     <DrawerItem
-      icon={() => <Icon name={icon} color={isActive ? '#233DFD' : 'white'} size={40} />}
+      icon={() => <Icon name={icon} color={isActive ? '#233DFD' : 'white'} size={35} />}
       label={label}
       onPress={() => {
         onPress();
@@ -163,7 +163,7 @@ function DrawerContent(props) {
       <View style={{ bottom: 30, borderBottomWidth: 5, borderBottomColor: '#dedede' }}>
         <DrawerItem
           icon={() => (
-            <Icon name="chat-alert-outline" color={'white'} size={40} />
+            <Icon name="chat-alert-outline" color={'white'} size={30} />
           )}
           label="Send Email"
           labelStyle={{ color: 'white' }}
@@ -173,7 +173,7 @@ function DrawerContent(props) {
       <View style={styles.bottomDrawerSection}>
         <DrawerItem
           icon={() => (
-            <Icon name="exit-to-app" color={'red'} size={40} />
+            <Icon name="exit-to-app" color={'red'} size={30} />
           )}
           label="Sign Out"
           labelStyle={{ color: 'red' }}
