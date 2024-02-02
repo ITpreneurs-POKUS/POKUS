@@ -9,10 +9,7 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 import { configureStore } from "@reduxjs/toolkit";
 import reducer from "./src/components/screens/Features/FlashCards/src/reducers";
-// import { setLocalNotification } from "../POKUS/src/components/screens/Features/FlashCards/src/utils/helpers";
-// import { useEffect } from "react";
 import { PaperProvider } from "react-native-paper";
-
 
 
 const middleware = [thunk, logger];
@@ -23,9 +20,7 @@ const store = configureStore({
 });
 
 const App = () => {
-  // useEffect(() => {
-  //   setLocalNotification();
-  // }, []);
+
   return (
         <Provider store={store}>
           <PaperProvider>
